@@ -15,7 +15,6 @@ public class ServerGame implements Serializable {
 	private String gameName;
 	private Status status;
 	
-
 	public ServerGame(int gameId, String serverName, String startScript) {
 		super();
 		this.gameId = gameId;

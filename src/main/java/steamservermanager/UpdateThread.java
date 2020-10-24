@@ -25,10 +25,8 @@ public class UpdateThread extends Thread {
 			steamCmd = new SteamCMD(new listenerSteamCMD());
 			steamCmd.loginAnonymous();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

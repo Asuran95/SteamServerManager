@@ -1,13 +1,21 @@
-import steamservermanager.ServerGame;
-import steamservermanager.SteamServerManager;
-import steamservermanager.exceptions.ServerNameException;
+import steamservermanager.ServerRunner;
 
 public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
-		// TODO Auto-generated method stub /home/asu/librarytest/
 		
-		SteamServerManager serverManager = new SteamServerManager("/home/asu/librarytest");
+		
+		ServerRunner run = new ServerRunner(null);
+		
+		
+		
+		run.start();
+		
+		
+		run.join();
+		
+		/*
+		SteamServerManager serverManager = new SteamServerManager("/mnt/steamcompat/librarytest");
 		
 		
 		ServerGame server1 = new ServerGame(90, "servidor do fulaninhos", "");
@@ -24,7 +32,7 @@ public class Main {
 		
 		try {
 			serverManager.newServerGame(server2);
-		} catch (ServerNameException e) {}
+		} catch (ServerNameException e) {}*/
 		
 	}
 
