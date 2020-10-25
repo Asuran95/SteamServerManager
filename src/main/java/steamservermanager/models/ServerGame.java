@@ -1,7 +1,8 @@
-package steamservermanager;
+package steamservermanager.models;
 
 import java.io.Serializable;
 import java.util.UUID;
+import steamservermanager.Status;
 
 public class ServerGame implements Serializable {
 	
