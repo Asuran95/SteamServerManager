@@ -8,6 +8,7 @@ package steamservermanager.view;
 import javax.swing.JFileChooser;
 import steamcmd.SteamCMDListener;
 import steamservermanager.SteamServerManager;
+import steamservermanager.interfaces.SteamServerManagerListener;
 
 /**
  *
@@ -181,6 +182,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Server Manager", jPanel1);
 
+        jTextArea1.setEditable(false);
         jTextArea1.setBackground(new java.awt.Color(80, 80, 80));
         jTextArea1.setColumns(20);
         jTextArea1.setForeground(new java.awt.Color(102, 204, 0));
@@ -230,20 +232,16 @@ public class MainFrame extends javax.swing.JFrame {
         chooser.setAcceptAllFileFilterUsed(false);
            
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            
              
-            manager = new SteamServerManager(chooser.getSelectedFile().toString(), new SwingSteamCmdListener());
+            manager = new SteamServerManager(chooser.getSelectedFile().toString());
+            
+            manager.setListener(new SwingSteamCmdListener());
             
             jLabel1.setText(chooser.getSelectedFile().toString());
             
             jButton2.setEnabled(true);
-            
-            /*
-            if(listUpdater == null){
-                listUpdater = new serverListUpdater();
-                listUpdater.start();
-            }
-            */
-            
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -280,15 +278,6 @@ public class MainFrame extends javax.swing.JFrame {
                 new MainFrame().setVisible(true);
             }
         });
-        
-        
-         
-        
-        
-        
-        
-        
-        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -312,28 +301,23 @@ public class MainFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     
     
-    class SwingSteamCmdListener implements SteamCMDListener{
+    class SwingSteamCmdListener implements SteamServerManagerListener{
 
         @Override
-        public void onStdOut(String out) {
+        public void onSteamCMDStdOut(String out) {
             
             jTextArea1.setText(jTextArea1.getText() + out + "\n");
             
         }
 
         @Override
-        public String onAuthCode() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        public void onUpdateServerStatus() {
+            //Implementar aqui a atualização da lista dos servidores 
         }
 
         @Override
-        public void onFailedLoginCode() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void onInvalidPassword() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        public void onReady() {
+            
         }
     }
     

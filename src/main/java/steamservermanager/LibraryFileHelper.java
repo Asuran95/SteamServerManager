@@ -55,7 +55,6 @@ public class LibraryFileHelper {
                 e.printStackTrace();
             }
         }
-
         return library;
     }
 

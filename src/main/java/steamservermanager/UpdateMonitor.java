@@ -36,7 +36,6 @@ public class UpdateMonitor {
                 e.printStackTrace();
             }
         }
-
         return updateList.get(0);
     }
 

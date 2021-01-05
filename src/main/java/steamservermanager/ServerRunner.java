@@ -10,6 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pty4j.PtyProcess;
+import java.io.BufferedWriter;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import steamservermanager.interfaces.ServerRunnerListener;
+import steamservermanager.interfaces.StandardInputInterface;
+import steamservermanager.interfaces.IServerProperties;
+import steamservermanager.models.ServerGameViewer;
 
 public class ServerRunner extends Thread {
 
@@ -17,25 +26,22 @@ public class ServerRunner extends Thread {
     private String localDir;
 
     private PtyProcess pty;
+    private ServerRunnerListener listener;
+    private boolean running = true;
 
-    public ServerRunner(ServerGame serverGame) {
+    public ServerRunner(ServerGame serverGame, String localDir) {
         this.serverGame = serverGame;
+        this.localDir = localDir;
     }
 
     @Override
     public void run() {
 
-        String startScript = "Binaries/Win64/KFGameSteamServer.bin.x86_64 KF-BurningParis";
-
-        String serverName = "kf2 server";
-
-        localDir = "/mnt/steamcompat/librarytest";
-
         List<String> commandBuffer = new ArrayList<>();
 
-        String[] scriptSplit = startScript.split(" ");
+        String[] scriptSplit = serverGame.getStartScript().split(" ");
 
-        String pathServer = localDir + File.separator + serverName + File.separator + scriptSplit[0];
+        String pathServer = localDir + File.separator + serverGame.getServerName() + File.separator + scriptSplit[0];
 
         commandBuffer.add(pathServer);
 
@@ -45,7 +51,6 @@ public class ServerRunner extends Thread {
         }
 
         try {
-
             this.pty = PtyProcess.exec(commandBuffer.toArray(new String[0]));
 
             InputStream stdout = pty.getInputStream();
@@ -60,10 +65,59 @@ public class ServerRunner extends Thread {
 
                 System.out.println(out);
 
+                if (listener != null) {
+                    listener.onOutput(out);
+                }
             }
 
-        } catch (IOException e) {
-        }
+            running = false;
 
+        } catch (IOException e) {
+            //Capturar isso aqui né filhão
+        } finally {
+            pty.destroyForcibly();
+        }
+    }
+
+    public IServerProperties getServerProperties() {
+
+        return new IServerProperties() {
+            @Override
+            public StandardInputInterface setListener(ServerRunnerListener listenerImpl) {
+                listener = listenerImpl;
+                return new StandardInputImpl();
+            }
+
+            @Override
+            public ServerGameViewer getServerGame() {
+                return new ServerGameViewer(serverGame);
+            }
+
+            @Override
+            public boolean isRunning() {
+                return running;
+            }
+        };
+    }
+
+    class StandardInputImpl implements StandardInputInterface {
+
+        public void onSend(String command) {
+            try {
+                OutputStream stdin = pty.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdin));
+
+                System.out.println(command);
+
+                writer.write(command + "\n");
+                writer.flush();
+            } catch (IOException ex) {
+                Logger.getLogger(ServerRunner.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public ServerGame getServerGame() {
+        return serverGame;
     }
 }

@@ -5,61 +5,61 @@ import java.util.UUID;
 import steamservermanager.Status;
 
 public class ServerGame implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	private final String id = UUID.randomUUID().toString();
-	private int gameId;
-	private final String serverName;
-	private String startScript;
-	
-	private String gameName;
-	private Status status;
-	
-	public ServerGame(int gameId, String serverName, String startScript) {
-		super();
-		this.gameId = gameId;
-		this.serverName = serverName;
-		this.startScript = startScript;
-	}
 
-	public String getId() {
-		return id;
-	}
+    private static final long serialVersionUID = 1L;
 
-	public int getGameId() {
-		return gameId;
-	}
+    private final String id = UUID.randomUUID().toString();
+    private int gameId;
+    private final String serverName;
+    private String startScript;
 
-	public void setGameId(int gameId) {
-		this.gameId = gameId;
-	}
+    private String gameName;
+    private Status status;
 
-	public String getServerName() {
-		return serverName;
-	}
+    public ServerGame(int gameId, String serverName, String startScript) {
+        super();
+        this.gameId = gameId;
+        this.serverName = serverName;
+        this.startScript = startScript;
+    }
 
-	public String getStartScript() {
-		return startScript;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setStartScript(String startScript) {
-		this.startScript = startScript;
-	}
+    public int getGameId() {
+        return gameId;
+    }
 
-	public String getGameName() {
-		return gameName;
-	}
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
 
-	public void setGameName(String gameName) {
-		this.gameName = gameName;
-	}
+    public String getServerName() {
+        return serverName;
+    }
 
-	public Status getStatus() {
-		return status;
-	}
+    public String getStartScript() {
+        return startScript;
+    }
 
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+    public void setStartScript(String startScript) {
+        this.startScript = startScript;
+    }
+
+    public String getGameName() {
+        return gameName;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }
