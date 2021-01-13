@@ -15,23 +15,27 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import steamservermanager.interfaces.ServerRunnerListener;
 import steamservermanager.interfaces.StandardInputInterface;
-import steamservermanager.interfaces.IServerProperties;
 import steamservermanager.models.ServerGameViewer;
+import steamservermanager.interfaces.StandardOutputInterface;
+import steamservermanager.interfaces.ServerProperties;
+import steamservermanager.interfaces.ServerRunnerListener;
 
-public class ServerRunner extends Thread {
+class ServerRunner extends Thread {
 
     private ServerGame serverGame;
     private String localDir;
 
     private PtyProcess pty;
-    private ServerRunnerListener listener;
+    private StandardOutputInterface listenerStdOut;
     private boolean running = true;
+    
+    private ServerRunnerListener listener;
 
-    public ServerRunner(ServerGame serverGame, String localDir) {
+    public ServerRunner(ServerGame serverGame, String localDir, ServerRunnerListener listener) {
         this.serverGame = serverGame;
         this.localDir = localDir;
+        this.listener = listener;
     }
 
     @Override
@@ -46,7 +50,6 @@ public class ServerRunner extends Thread {
         commandBuffer.add(pathServer);
 
         for (int i = 1; i < scriptSplit.length; i++) {
-
             commandBuffer.add(scriptSplit[i]);
         }
 
@@ -55,7 +58,11 @@ public class ServerRunner extends Thread {
 
             InputStream stdout = pty.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stdout), 1);
-
+            
+            
+            listener.onServerStart(serverGame);
+            serverGame.setStatus(Status.RUNNING);
+            
             while (true) {
                 String out = reader.readLine();
 
@@ -65,26 +72,30 @@ public class ServerRunner extends Thread {
 
                 System.out.println(out);
 
-                if (listener != null) {
-                    listener.onOutput(out);
+                if (listenerStdOut != null) {
+                    listenerStdOut.onOutput(out);
                 }
             }
 
             running = false;
 
         } catch (IOException e) {
-            //Capturar isso aqui né filhão
+            running = false;
+            listener.onServerException(serverGame);
         } finally {
             pty.destroyForcibly();
+            
+            serverGame.setStatus(Status.STOPPED);
+            listener.onServerStopped(serverGame);
         }
     }
 
-    public IServerProperties getServerProperties() {
+    public ServerProperties getServerProperties() {
 
-        return new IServerProperties() {
+        return new ServerProperties() {
             @Override
-            public StandardInputInterface setListener(ServerRunnerListener listenerImpl) {
-                listener = listenerImpl;
+            public StandardInputInterface setListener(StandardOutputInterface listenerImpl) {
+                listenerStdOut = listenerImpl;
                 return new StandardInputImpl();
             }
 
@@ -102,7 +113,8 @@ public class ServerRunner extends Thread {
 
     class StandardInputImpl implements StandardInputInterface {
 
-        public void onSend(String command) {
+        @Override
+        public void send(String command) {
             try {
                 OutputStream stdin = pty.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdin));

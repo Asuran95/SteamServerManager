@@ -12,15 +12,16 @@ import steamservermanager.exceptions.ServerNameException;
 import steamservermanager.exceptions.ServerNotRunningException;
 import steamservermanager.exceptions.StartServerException;
 import steamservermanager.interfaces.SteamServerManagerListener;
-import steamservermanager.interfaces.IServerProperties;
+import steamservermanager.interfaces.UpdateMonitorListener;
 import steamservermanager.models.ServerGameViewer;
+import steamservermanager.interfaces.ServerProperties;
+import steamservermanager.interfaces.ServerRunnerListener;
 
 public class SteamServerManager {
 
     private List<ServerGame> library = null;
     private List<ServerRunner> libraryRunning = new ArrayList<>();
-    
-    
+       
     private String localLibrary;
 
     private UpdateThread updateThread;
@@ -45,7 +46,7 @@ public class SteamServerManager {
     }
 
     private void init() {
-        updateMonitor = new UpdateMonitor(libraryHelper);
+        updateMonitor = new UpdateMonitor(new UpdateMonitorListenerImpl());
 
         try {
             steamCmd = new SteamCMD(new ConsoleSteamCmdListener());
@@ -67,7 +68,6 @@ public class SteamServerManager {
                 l.setStatus(Status.STOPPED);
             }
         }
-        
         listener.onReady();
     }
 
@@ -93,19 +93,19 @@ public class SteamServerManager {
         updateMonitor.addUpdate(serverGame);
     }
 
-    public IServerProperties startServer(ServerGameViewer serverGame) throws StartServerException {
+    public ServerProperties startServer(ServerGameViewer serverGame) throws StartServerException {
         return startServer(serverGame.getId());
     }
     
-    public IServerProperties startServer(String id) throws StartServerException{
+    public ServerProperties startServer(String id) throws StartServerException{
         
-        IServerProperties serverProperties = null;
+        ServerProperties serverProperties = null;
         
         for(ServerGame server : library){
             
             if(server.getId().equals(id)){
                 
-                ServerRunner runner = new ServerRunner(server, localLibrary);
+                ServerRunner runner = new ServerRunner(server, localLibrary, new ServerRunnerListenerImpl());
                 
                 runner.start();
                 
@@ -123,7 +123,7 @@ public class SteamServerManager {
         return serverProperties;     
     }
     
-    public IServerProperties getServerProperties(String id) throws ServerNotRunningException {
+    public ServerProperties getServerProperties(String id) throws ServerNotRunningException {
         
         for(ServerRunner runner : libraryRunning){
             
@@ -164,12 +164,73 @@ public class SteamServerManager {
     public void setListener(SteamServerManagerListener listener){
         this.listener = listener;
     }
+    
+    /**
+     * Classes aninhadas implementando interfaces funcionais
+     */
+    
+    class ServerRunnerListenerImpl implements ServerRunnerListener{
+
+        @Override
+        public void onServerStart(ServerGame serverGame) {
+            libraryHelper.updateLibraryFile();
+            listener.onUpdateServerStatus();
+        }
+
+        @Override
+        public void onServerStopped(ServerGame serverGame) {
+            libraryHelper.updateLibraryFile();
+            listener.onUpdateServerStatus();
+        }
+
+        @Override
+        public void onServerException(ServerGame serverGame) {
+            
+        }     
+    }
+    
+    class UpdateMonitorListenerImpl implements UpdateMonitorListener {
+
+        @Override
+        public void onNewUpdate(ServerGame server) {
+            libraryHelper.updateLibraryFile();
+            listener.onUpdateServerStatus();
+        }
+
+        @Override
+        public void onGetUpdateJob(ServerGame server) {
+            libraryHelper.updateLibraryFile();
+            listener.onUpdateServerStatus();
+            listener.onUpdateServer(new ServerGameViewer(server));
+        }
+
+        @Override
+        public void onCompleteJob(ServerGame server) {
+            libraryHelper.updateLibraryFile();
+            listener.onUpdateServerStatus();
+            listener.onCompleteUpdateServer();
+        }
+        
+    }
 
     class ConsoleSteamCmdListener implements SteamCMDListener {
 
         @Override
         public void onStdOut(String out) {
             listener.onSteamCMDStdOut(out);
+            
+            if(out.contains("verifying") || out.contains("downloading")){
+                
+                String[] splitOut = out.split(":");
+                
+                String[] pctStringSplit = splitOut[1].split(" ");
+                
+                String[] statusStringSplit = splitOut[0].split(" ");
+                
+                double pct = Double.parseDouble(pctStringSplit[1]);
+                
+                listener.onStatusSteamCMD(statusStringSplit[4].replace(",", ""), pct);
+            }
         }
 
         @Override
@@ -211,6 +272,21 @@ public class SteamServerManager {
         @Override
         public void onReady() {
             System.out.println("Ready!!");
+        }
+
+        @Override
+        public void onStatusSteamCMD(String status, double pctUpdate) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void onUpdateServer(ServerGameViewer serverGame) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void onCompleteUpdateServer() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
 }

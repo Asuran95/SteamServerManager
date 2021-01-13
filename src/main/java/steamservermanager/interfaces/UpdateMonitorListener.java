@@ -5,12 +5,14 @@
  */
 package steamservermanager.interfaces;
 
+import steamservermanager.models.ServerGame;
+
 /**
  *
  * @author asu
  */
-public interface StandardInputInterface {
-    
-    void send(String command);
-    
+public interface UpdateMonitorListener {
+    void onNewUpdate(ServerGame server);
+    void onGetUpdateJob(ServerGame server);
+    void onCompleteJob(ServerGame server);
 }

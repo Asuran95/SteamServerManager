@@ -11,10 +11,10 @@ import steamservermanager.models.ServerGameViewer;
  *
  * @author asu
  */
-public interface IServerProperties {
+public interface ServerProperties {
     
-    StandardInputInterface setListener(ServerRunnerListener listener);
+    StandardInputInterface setListener(StandardOutputInterface listener);
     ServerGameViewer getServerGame();
     boolean isRunning();
-    
+
 }

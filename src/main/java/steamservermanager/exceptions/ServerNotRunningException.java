@@ -9,6 +9,6 @@ package steamservermanager.exceptions;
  *
  * @author asu
  */
-public class ServerNotRunningException {
+public class ServerNotRunningException extends Exception {
     
 }

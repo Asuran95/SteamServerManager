@@ -5,10 +5,14 @@
  */
 package steamservermanager.view;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.table.DefaultTableModel;
 import steamcmd.SteamCMDListener;
 import steamservermanager.SteamServerManager;
 import steamservermanager.interfaces.SteamServerManagerListener;
+import steamservermanager.models.ServerGameViewer;
 
 /**
  *
@@ -17,13 +21,24 @@ import steamservermanager.interfaces.SteamServerManagerListener;
 public class MainFrame extends javax.swing.JFrame {
 
     private SteamServerManager manager;
-    private serverListUpdater listUpdater;
     
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        
+        DefaultTableModel model = (DefaultTableModel) jTableLibrary.getModel();
+        
+        String[] linha = {"teste"};
+        
+        model.addRow(linha);
+        
+        
+
+        jTableLibrary.setValueAt("asaaas", 0, 0);
+        
+        model.setRowCount(0);
     }
 
     /**
@@ -37,35 +52,31 @@ public class MainFrame extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        jButtonOpenLibrary = new javax.swing.JButton();
+        jLabelLocalLibrary = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        jTableLibrary = new javax.swing.JTable();
+        jButtonNewServer = new javax.swing.JButton();
+        jButtonStartServer = new javax.swing.JButton();
+        jProgressBarUpdate = new javax.swing.JProgressBar();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTextAreaSteamCMD = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jButton1.setText("Open");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonOpenLibrary.setText("Open");
+        jButtonOpenLibrary.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonOpenLibraryActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("No directory selected!");
+        jLabelLocalLibrary.setText("No directory selected!");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableLibrary.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -88,70 +99,54 @@ public class MainFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setMinWidth(60);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(60);
-            jTable1.getColumnModel().getColumn(2).setMaxWidth(60);
-            jTable1.getColumnModel().getColumn(3).setMinWidth(120);
-            jTable1.getColumnModel().getColumn(3).setPreferredWidth(120);
-            jTable1.getColumnModel().getColumn(3).setMaxWidth(120);
+        jTableLibrary.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(jTableLibrary);
+        if (jTableLibrary.getColumnModel().getColumnCount() > 0) {
+            jTableLibrary.getColumnModel().getColumn(0).setResizable(false);
+            jTableLibrary.getColumnModel().getColumn(1).setResizable(false);
+            jTableLibrary.getColumnModel().getColumn(2).setMinWidth(60);
+            jTableLibrary.getColumnModel().getColumn(2).setPreferredWidth(60);
+            jTableLibrary.getColumnModel().getColumn(2).setMaxWidth(60);
+            jTableLibrary.getColumnModel().getColumn(3).setMinWidth(120);
+            jTableLibrary.getColumnModel().getColumn(3).setPreferredWidth(120);
+            jTableLibrary.getColumnModel().getColumn(3).setMaxWidth(120);
         }
 
-        jButton2.setText("New");
-        jButton2.setEnabled(false);
+        jButtonNewServer.setText("New");
+        jButtonNewServer.setEnabled(false);
+        jButtonNewServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonNewServerActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Update");
-        jButton3.setEnabled(false);
-
-        jButton4.setText("Edit");
-        jButton4.setEnabled(false);
-        jButton4.setMaximumSize(new java.awt.Dimension(74, 27));
-        jButton4.setMinimumSize(new java.awt.Dimension(74, 27));
-
-        jButton5.setText("Delete");
-        jButton5.setEnabled(false);
-
-        jButton6.setText("Update All");
-        jButton6.setEnabled(false);
-
-        jButton7.setText("Stop");
-        jButton7.setEnabled(false);
-
-        jButton8.setText("Start");
-        jButton8.setEnabled(false);
+        jButtonStartServer.setText("Start");
+        jButtonStartServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonStartServerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButtonNewServer, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 388, Short.MAX_VALUE)
+                        .addComponent(jButtonStartServer, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(320, 320, 320))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButtonOpenLibrary)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 290, Short.MAX_VALUE)
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabelLocalLibrary)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -159,8 +154,8 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel1))
+                    .addComponent(jButtonOpenLibrary)
+                    .addComponent(jLabelLocalLibrary))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -168,26 +163,23 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(13, 13, 13)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton5)
-                            .addComponent(jButton6)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton7)
-                            .addComponent(jButton8))))
-                .addGap(5, 5, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                            .addComponent(jButtonNewServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButtonStartServer))))
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
         );
 
         jTabbedPane1.addTab("Server Manager", jPanel1);
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setBackground(new java.awt.Color(80, 80, 80));
-        jTextArea1.setColumns(20);
-        jTextArea1.setForeground(new java.awt.Color(102, 204, 0));
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        jTextAreaSteamCMD.setEditable(false);
+        jTextAreaSteamCMD.setBackground(new java.awt.Color(80, 80, 80));
+        jTextAreaSteamCMD.setColumns(20);
+        jTextAreaSteamCMD.setForeground(new java.awt.Color(102, 204, 0));
+        jTextAreaSteamCMD.setRows(5);
+        jScrollPane2.setViewportView(jTextAreaSteamCMD);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -222,7 +214,7 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonOpenLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenLibraryActionPerformed
         JFileChooser chooser;
         chooser = new JFileChooser();
         chooser.setCurrentDirectory(new java.io.File("."));
@@ -233,17 +225,36 @@ public class MainFrame extends javax.swing.JFrame {
            
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             
-             
             manager = new SteamServerManager(chooser.getSelectedFile().toString());
             
-            manager.setListener(new SwingSteamCmdListener());
+            manager.setListener(new SteamServerManagerListenerImpl());
             
-            jLabel1.setText(chooser.getSelectedFile().toString());
+            jLabelLocalLibrary.setText(chooser.getSelectedFile().toString());
             
-            jButton2.setEnabled(true);
-
+            jButtonNewServer.setEnabled(true);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonOpenLibraryActionPerformed
+
+    private void jButtonNewServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewServerActionPerformed
+        
+        NewServerFrame newServerFrame = new NewServerFrame(manager);
+         
+        newServerFrame.setVisible(true);  
+    }//GEN-LAST:event_jButtonNewServerActionPerformed
+
+    private void jButtonStartServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartServerActionPerformed
+        
+        int jTableIndexSelected = jTableLibrary.getSelectedRow();
+        
+        if(jTableIndexSelected >= 0){
+            
+        }
+        
+        
+        System.out.println(jTableIndexSelected);
+        
+        
+    }//GEN-LAST:event_jButtonStartServerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -281,57 +292,87 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jButtonNewServer;
+    private javax.swing.JButton jButtonOpenLibrary;
+    private javax.swing.JButton jButtonStartServer;
+    private javax.swing.JLabel jLabelLocalLibrary;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JProgressBar jProgressBarUpdate;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTable jTableLibrary;
+    private javax.swing.JTextArea jTextAreaSteamCMD;
     // End of variables declaration//GEN-END:variables
     
     
-    class SwingSteamCmdListener implements SteamServerManagerListener{
+    private List<ServerGameViewer> libraryList = new ArrayList<>();
+    
+    public void updateJTableLibrary(){
+        libraryList = manager.getLibraryList();
+        
+        DefaultTableModel model = (DefaultTableModel) jTableLibrary.getModel();
+        
+        model.setRowCount(0);
+        
+        for(ServerGameViewer s : libraryList){
+            System.out.println(s.getServerName());
+            
+            String[] linha = { s.getServerName(), "", s.getGameId()+"", s.getStatus().toString() };
+        
+            model.addRow(linha);
+        }      
+    }
+    
+    private ServerGameViewer serverGameAtual;
+    
+    class SteamServerManagerListenerImpl implements SteamServerManagerListener{
 
         @Override
         public void onSteamCMDStdOut(String out) {
-            
-            jTextArea1.setText(jTextArea1.getText() + out + "\n");
-            
+            jTextAreaSteamCMD.setText(jTextAreaSteamCMD.getText() + out + "\n");     
         }
 
         @Override
         public void onUpdateServerStatus() {
-            //Implementar aqui a atualização da lista dos servidores 
+            updateJTableLibrary();
         }
 
         @Override
         public void onReady() {
-            
+            updateJTableLibrary();
         }
-    }
-    
-    
-    class serverListUpdater extends Thread {
-        
+
         @Override
-        public void run() {
+        public void onStatusSteamCMD(String status, double pctUpdate) {
+            System.out.println(pctUpdate);
             
-            while(true){
-                
+            jProgressBarUpdate.setStringPainted(true);
+            
+            if(serverGameAtual != null){
+                jProgressBarUpdate.setString(serverGameAtual.getServerName() + " - " + status + ": " + pctUpdate + "%");
+            } else {
+                jProgressBarUpdate.setString("");
             }
-            
-            
+             
+            jProgressBarUpdate.setMaximum(100);
+            jProgressBarUpdate.setValue((int) pctUpdate);
         }
-    }  
+
+        @Override
+        public void onUpdateServer(ServerGameViewer serverGame) {
+            serverGameAtual = serverGame;
+        }
+
+        @Override
+        public void onCompleteUpdateServer() {
+            System.out.println("Atualização completa");
+            serverGameAtual = null;
+            jProgressBarUpdate.setString("");
+            jProgressBarUpdate.setValue(0);
+        }
+
+    } 
 }
