@@ -1,6 +1,8 @@
 package steamservermanager.interfaces;
 
-import steamservermanager.models.ServerGameViewer;
+import steamservermanager.models.ServerGame;
+
+
 
 public interface SteamServerManagerListener {
     
@@ -8,7 +10,7 @@ public interface SteamServerManagerListener {
     void onSteamCMDStdOut(String out);
     void onReady();
     void onStatusSteamCMD(String status, double pctUpdate);
-    void onUpdateServer(ServerGameViewer serverGame);
+    void onUpdateServer(ServerGame serverGame);
     void onCompleteUpdateServer();
     
 }

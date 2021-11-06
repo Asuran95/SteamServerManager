@@ -5,7 +5,6 @@ import steamservermanager.SteamServerManager;
 import steamservermanager.exceptions.ServerNameException;
 import steamservermanager.interfaces.StandardInputInterface;
 import steamservermanager.models.ServerGame;
-import steamservermanager.models.ServerGameViewer;
 
 public class Main {
 

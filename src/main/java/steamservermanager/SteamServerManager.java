@@ -13,7 +13,6 @@ import steamservermanager.exceptions.ServerNotRunningException;
 import steamservermanager.exceptions.StartServerException;
 import steamservermanager.interfaces.SteamServerManagerListener;
 import steamservermanager.interfaces.UpdateMonitorListener;
-import steamservermanager.models.ServerGameViewer;
 import steamservermanager.interfaces.ServerProperties;
 import steamservermanager.interfaces.ServerRunnerListener;
 
@@ -38,10 +37,12 @@ public class SteamServerManager {
         this.listener = new ManagerListenerDummy();
         
         new Thread(){
+            
             @Override
             public void run() {
                 init();
-            }  
+            }
+            
         }.start();
     }
 
@@ -93,7 +94,7 @@ public class SteamServerManager {
         updateMonitor.addUpdate(serverGame);
     }
 
-    public ServerProperties startServer(ServerGameViewer serverGame) throws StartServerException {
+    public ServerProperties startServer(ServerGame serverGame) throws StartServerException {
         return startServer(serverGame.getId());
     }
     
@@ -135,12 +136,12 @@ public class SteamServerManager {
         throw new ServerNotRunningException();     
     }
     
-    public List<ServerGameViewer> getLibraryList(){
+    public List<ServerGame> getLibraryList(){
         
-        List<ServerGameViewer> libraryViewer = new ArrayList<>();
+        List<ServerGame> libraryViewer = new ArrayList<>();
         
         for(ServerGame serverGame : library){
-            libraryViewer.add(new ServerGameViewer(serverGame));  
+            libraryViewer.add(serverGame);  
         }
         return libraryViewer;
     }
@@ -197,7 +198,7 @@ public class SteamServerManager {
         public void onGetUpdateJob(ServerGame server) {
             libraryHelper.updateLibraryFile();
             listener.onUpdateServerStatus();
-            listener.onUpdateServer(new ServerGameViewer(server));
+            listener.onUpdateServer(server);
         }
 
         @Override
@@ -205,8 +206,7 @@ public class SteamServerManager {
             libraryHelper.updateLibraryFile();
             listener.onUpdateServerStatus();
             listener.onCompleteUpdateServer();
-        }
-        
+        }  
     }
 
     class ConsoleSteamCmdListener implements SteamCMDListener {
@@ -276,7 +276,7 @@ public class SteamServerManager {
         }
 
         @Override
-        public void onUpdateServer(ServerGameViewer serverGame) {
+        public void onUpdateServer(ServerGame serverGame) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 

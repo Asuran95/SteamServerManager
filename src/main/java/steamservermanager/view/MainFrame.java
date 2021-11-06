@@ -7,12 +7,16 @@ package steamservermanager.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 import steamcmd.SteamCMDListener;
 import steamservermanager.SteamServerManager;
+import steamservermanager.exceptions.StartServerException;
+import steamservermanager.interfaces.ServerProperties;
 import steamservermanager.interfaces.SteamServerManagerListener;
-import steamservermanager.models.ServerGameViewer;
+import steamservermanager.models.ServerGame;
 
 /**
  *
@@ -20,7 +24,7 @@ import steamservermanager.models.ServerGameViewer;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    private SteamServerManager manager;
+    private SteamServerManager steamServerManager;
     
     /**
      * Creates new form MainFrame
@@ -225,9 +229,9 @@ public class MainFrame extends javax.swing.JFrame {
            
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             
-            manager = new SteamServerManager(chooser.getSelectedFile().toString());
+            steamServerManager = new SteamServerManager(chooser.getSelectedFile().toString());
             
-            manager.setListener(new SteamServerManagerListenerImpl());
+            steamServerManager.setListener(new SteamServerManagerListenerImpl());
             
             jLabelLocalLibrary.setText(chooser.getSelectedFile().toString());
             
@@ -237,7 +241,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jButtonNewServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewServerActionPerformed
         
-        NewServerFrame newServerFrame = new NewServerFrame(manager);
+        NewServerFrame newServerFrame = new NewServerFrame(steamServerManager);
          
         newServerFrame.setVisible(true);  
     }//GEN-LAST:event_jButtonNewServerActionPerformed
@@ -247,7 +251,11 @@ public class MainFrame extends javax.swing.JFrame {
         int jTableIndexSelected = jTableLibrary.getSelectedRow();
         
         if(jTableIndexSelected >= 0){
-            
+            try {
+                ServerProperties startServer = steamServerManager.startServer(serverGameLibrary.get(jTableIndexSelected));
+            } catch (StartServerException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         
@@ -308,16 +316,17 @@ public class MainFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     
     
-    private List<ServerGameViewer> libraryList = new ArrayList<>();
+    private List<ServerGame> serverGameLibrary = new ArrayList<>();
+    private ServerGame serverGameAtual;
     
     public void updateJTableLibrary(){
-        libraryList = manager.getLibraryList();
+        serverGameLibrary = steamServerManager.getLibraryList();
         
         DefaultTableModel model = (DefaultTableModel) jTableLibrary.getModel();
         
         model.setRowCount(0);
         
-        for(ServerGameViewer s : libraryList){
+        for(ServerGame s : serverGameLibrary){
             System.out.println(s.getServerName());
             
             String[] linha = { s.getServerName(), "", s.getGameId()+"", s.getStatus().toString() };
@@ -325,8 +334,6 @@ public class MainFrame extends javax.swing.JFrame {
             model.addRow(linha);
         }      
     }
-    
-    private ServerGameViewer serverGameAtual;
     
     class SteamServerManagerListenerImpl implements SteamServerManagerListener{
 
@@ -362,7 +369,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
         @Override
-        public void onUpdateServer(ServerGameViewer serverGame) {
+        public void onUpdateServer(ServerGame serverGame) {
             serverGameAtual = serverGame;
         }
 

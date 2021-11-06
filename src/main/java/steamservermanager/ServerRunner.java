@@ -16,7 +16,6 @@ import java.io.OutputStreamWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import steamservermanager.interfaces.StandardInputInterface;
-import steamservermanager.models.ServerGameViewer;
 import steamservermanager.interfaces.StandardOutputInterface;
 import steamservermanager.interfaces.ServerProperties;
 import steamservermanager.interfaces.ServerRunnerListener;
@@ -100,8 +99,8 @@ class ServerRunner extends Thread {
             }
 
             @Override
-            public ServerGameViewer getServerGame() {
-                return new ServerGameViewer(serverGame);
+            public ServerGame getServerGame() {
+                return serverGame;
             }
 
             @Override
