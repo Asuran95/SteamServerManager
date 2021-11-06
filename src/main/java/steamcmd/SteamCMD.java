@@ -1,5 +1,6 @@
 package steamcmd;
 
+import com.pty4j.PtyProcess;
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
@@ -13,11 +14,9 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
 
-import com.pty4j.PtyProcess;
 
 public class SteamCMD implements Closeable {
 

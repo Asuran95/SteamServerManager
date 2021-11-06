@@ -165,10 +165,6 @@ public class SteamServerManager {
         this.listener = listener;
     }
     
-    /**
-     * Classes aninhadas implementando interfaces funcionais
-     */
-    
     class ServerRunnerListenerImpl implements ServerRunnerListener{
 
         @Override
