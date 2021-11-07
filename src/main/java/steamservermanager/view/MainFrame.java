@@ -51,7 +51,16 @@ public class MainFrame extends javax.swing.JFrame {
     private void setupTableRightClick() {
         jTableLibrary.addMouseListener( new MouseAdapter() {
             @Override
+            public void mousePressed(MouseEvent e) {
+                openPopupMenu(e);
+            }
+
+            @Override
             public void mouseReleased(MouseEvent e) {
+                openPopupMenu(e);
+            }
+            
+            private void openPopupMenu(MouseEvent e) {
                 if (e.isPopupTrigger()) {
                     JTable source = (JTable) e.getSource();
                     int row = source.rowAtPoint(e.getPoint());
