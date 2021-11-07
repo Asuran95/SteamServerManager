@@ -27,7 +27,7 @@ class ServerRunner extends Thread {
 
     private PtyProcess pty;
     private StandardOutputInterface listenerStdOut;
-    private boolean running = true;
+    private boolean running = false;
     
     private ServerRunnerListener listener;
 
@@ -39,7 +39,9 @@ class ServerRunner extends Thread {
 
     @Override
     public void run() {
-
+        
+        running = true;
+        
         List<String> commandBuffer = new ArrayList<>();
 
         String[] scriptSplit = serverGame.getStartScript().split(" ");
@@ -68,9 +70,7 @@ class ServerRunner extends Thread {
                 if (out == null) {
                     break;
                 }
-
-                System.out.println(out);
-
+                
                 if (listenerStdOut != null) {
                     listenerStdOut.onOutput(out);
                 }
@@ -82,13 +82,21 @@ class ServerRunner extends Thread {
             running = false;
             listener.onServerException(serverGame);
         } finally {
-            pty.destroyForcibly();
-            
-            serverGame.setStatus(Status.STOPPED);
-            listener.onServerStopped(serverGame);
+            forceStop();
         }
     }
+    
+    public void forceStop(){
+        pty.destroyForcibly();
+            
+        serverGame.setStatus(Status.STOPPED);
+        listener.onServerStopped(serverGame);
+    }
 
+    public boolean isRunning() {
+        return running;
+    }
+    
     public ServerProperties getServerProperties() {
 
         return new ServerProperties() {

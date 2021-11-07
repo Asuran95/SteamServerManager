@@ -5,6 +5,8 @@
  */
 package steamservermanager.view;
 
+import steamservermanager.interfaces.StandardOutputInterface;
+
 /**
  *
  * @author pen
@@ -60,4 +62,15 @@ public class ServerGameConsole extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextAreaSteamCMD;
     // End of variables declaration//GEN-END:variables
+
+    class StandardOutputInterfaceImpl implements StandardOutputInterface{
+
+        @Override
+        public void onOutput(String msg) {
+            jTextAreaSteamCMD.setText(jTextAreaSteamCMD.getText() + msg + "\n");  
+        }
+        
+    }
+
+
 }

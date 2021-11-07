@@ -11,17 +11,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
-import steamcmd.SteamCMDListener;
 import steamservermanager.SteamServerManager;
 import steamservermanager.exceptions.StartServerException;
 import steamservermanager.interfaces.ServerProperties;
 import steamservermanager.interfaces.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
 
-/**
- *
- * @author asu
- */
+
 public class MainFrame extends javax.swing.JFrame {
 
     private SteamServerManager steamServerManager;
@@ -253,6 +249,14 @@ public class MainFrame extends javax.swing.JFrame {
         if(jTableIndexSelected >= 0){
             try {
                 ServerProperties startServer = steamServerManager.startServer(serverGameLibrary.get(jTableIndexSelected));
+                
+                
+                NewServerFrame newServerFrame = new NewServerFrame(steamServerManager);
+         
+                newServerFrame.setVisible(true);  
+                
+                
+                
             } catch (StartServerException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -320,7 +324,7 @@ public class MainFrame extends javax.swing.JFrame {
     private ServerGame serverGameAtual;
     
     public void updateJTableLibrary(){
-        serverGameLibrary = steamServerManager.getLibraryList();
+        serverGameLibrary = steamServerManager.getLibrary();
         
         DefaultTableModel model = (DefaultTableModel) jTableLibrary.getModel();
         

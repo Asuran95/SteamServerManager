@@ -18,7 +18,7 @@ import steamservermanager.interfaces.ServerRunnerListener;
 
 public class SteamServerManager {
 
-    private List<ServerGame> library = null;
+    private List<ServerGame> serverGameLibrary = null;
     private List<ServerRunner> libraryRunning = new ArrayList<>();
        
     private String localLibrary;
@@ -33,8 +33,9 @@ public class SteamServerManager {
     public SteamServerManager(String localLibrary) {
         this.localLibrary = localLibrary;
         libraryHelper = new LibraryFileHelper(localLibrary);
-        library = libraryHelper.loadLibraryFromDisk();
+        serverGameLibrary = libraryHelper.loadLibraryFromDisk();
         this.listener = new ManagerListenerDummy();
+        initializeLibraryServerRunner(serverGameLibrary, localLibrary);
         
         new Thread(){
             
@@ -44,6 +45,13 @@ public class SteamServerManager {
             }
             
         }.start();
+    }
+    
+    private void initializeLibraryServerRunner(List<ServerGame> serverGameLibrary, String localLibrary){
+        
+        for(ServerGame serverGame : serverGameLibrary){
+            libraryRunning.add(new ServerRunner(serverGame, localLibrary, new ServerRunnerListenerImpl()));
+        } 
     }
 
     private void init() {
@@ -60,21 +68,21 @@ public class SteamServerManager {
         updateThread = new UpdateThread(updateMonitor, localLibrary, steamCmd);
         updateThread.start();
 
-        //Verificar aqui se ainda possui algum servergame com status de waiting
-        for (ServerGame l : library) {
+        for (ServerGame serverGame : serverGameLibrary) {
 
-            if (l.getStatus().equals(Status.WAITING) || l.getStatus().equals(Status.UPDATING)) {
-                updateMonitor.addUpdate(l);
+            if (serverGame.getStatus().equals(Status.WAITING) || serverGame.getStatus().equals(Status.UPDATING)) {
+                updateServerGame(serverGame);
             } else {
-                l.setStatus(Status.STOPPED);
+                serverGame.setStatus(Status.STOPPED);
             }
         }
+        
         listener.onReady();
     }
 
-    public void newServerGame(int gameId, String serverName, String startScript) throws ServerNameException {
+    public ServerGame newServerGame(int gameId, String serverName, String startScript) throws ServerNameException {
 
-        for (ServerGame s : library) {
+        for (ServerGame s : serverGameLibrary) {
 
             if (s.getServerName().equals(serverName)) {
                 throw new ServerNameException();
@@ -83,75 +91,79 @@ public class SteamServerManager {
         
         ServerGame serverGame = new ServerGame(gameId, serverName, startScript);
         
-        library.add(serverGame);
-
+        serverGameLibrary.add(serverGame);
+        libraryRunning.add(new ServerRunner(serverGame, localLibrary, new ServerRunnerListenerImpl()));
+        
         updateServerGame(serverGame);
+        
+        return serverGame;
     }
 
     public void updateServerGame(ServerGame serverGame) {
-
-        //obs: Aqui deve colocar tambem um modo de parar o servidor caso esse comando seja chamado
+        
+        for(ServerRunner serverRunner : libraryRunning){
+            if(serverRunner.getServerGame().equals(serverGame) && serverRunner.isRunning()){
+                serverRunner.forceStop();
+            }
+        }
+        
         updateMonitor.addUpdate(serverGame);
     }
 
     public ServerProperties startServer(ServerGame serverGame) throws StartServerException {
-        return startServer(serverGame.getId());
-    }
-    
-    public ServerProperties startServer(String id) throws StartServerException{
         
         ServerProperties serverProperties = null;
         
-        for(ServerGame server : library){
+        for(ServerRunner serverRunner : libraryRunning){
             
-            if(server.getId().equals(id)){
-                
-                ServerRunner runner = new ServerRunner(server, localLibrary, new ServerRunnerListenerImpl());
-                
-                runner.start();
-                
-                serverProperties = runner.getServerProperties(); 
-                libraryRunning.add(runner);
-                
-                break;
+            if(serverRunner.getServerGame().equals(serverGame)){
+                if(!serverRunner.isRunning() && serverRunner.getServerGame().getStatus().equals(Status.STOPPED)){
+                    serverRunner.start();
+            
+                    serverProperties = serverRunner.getServerProperties();
+                } else {
+                    serverProperties = serverRunner.getServerProperties();
+                }
             }
         }
         
         if(serverProperties == null){
             throw new StartServerException();
         }
-             
-        return serverProperties;     
+        
+        return serverProperties;
     }
     
-    public ServerProperties getServerProperties(String id) throws ServerNotRunningException {
+    public ServerProperties startServer(String id) throws StartServerException {
+        return startServer(getServerGameById(id));    
+    }
+    
+    private ServerGame getServerGameById(String id){
         
-        for(ServerRunner runner : libraryRunning){
+        for(ServerGame server : serverGameLibrary){
             
-            if(runner.getServerGame().getId().equals(id)){
-                
-                return runner.getServerProperties();     
+            if(server.getId().equals(id)){
+                return server;
+            }
+        }
+        
+        return null;   
+    }
+    
+    public ServerProperties getServerProperties(ServerGame serverGame) throws ServerNotRunningException {
+        
+        for(ServerRunner serverRunner : libraryRunning){
+            
+            if(serverRunner.getServerGame().equals(serverGame)){
+                return serverRunner.getServerProperties();     
             }    
         }
+        
         throw new ServerNotRunningException();     
-    }
-    
-    public List<ServerGame> getLibraryList(){
-        
-        List<ServerGame> libraryViewer = new ArrayList<>();
-        
-        for(ServerGame serverGame : library){
-            libraryViewer.add(serverGame);  
-        }
-        return libraryViewer;
     }
 
     public List<ServerGame> getLibrary() {
-        return library;
-    }
-
-    public void setLibrary(List<ServerGame> library) {
-        this.library = library;
+        return serverGameLibrary;
     }
 
     public String getLocalLibrary() {
