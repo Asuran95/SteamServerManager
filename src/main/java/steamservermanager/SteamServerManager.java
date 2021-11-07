@@ -1,13 +1,13 @@
 package steamservermanager;
 
-import steamservermanager.models.ServerGame;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
+
 import steamcmd.SteamCMD;
 import steamcmd.SteamCMDListener;
-
 import steamservermanager.exceptions.ServerNameException;
 import steamservermanager.exceptions.ServerNotRunningException;
 import steamservermanager.exceptions.StartServerException;
@@ -15,6 +15,7 @@ import steamservermanager.interfaces.SteamServerManagerListener;
 import steamservermanager.interfaces.UpdateMonitorListener;
 import steamservermanager.interfaces.serverrunner.ServerProperties;
 import steamservermanager.interfaces.serverrunner.ServerRunnerListener;
+import steamservermanager.models.ServerGame;
 
 public class SteamServerManager {
 
@@ -111,27 +112,57 @@ public class SteamServerManager {
     }
 
     public ServerProperties startServer(ServerGame serverGame) throws StartServerException {
-        
-        ServerProperties serverProperties = null;
-        
-        for(ServerRunner serverRunner : libraryRunning){
-            
-            if(serverRunner.getServerGame().equals(serverGame)){
-                if(!serverRunner.isRunning() && serverRunner.getServerGame().getStatus().equals(Status.STOPPED)){
-                    serverRunner.start();
-            
-                    serverProperties = serverRunner.getServerProperties();
-                } else {
-                    serverProperties = serverRunner.getServerProperties();
-                }
-            }
-        }
-        
+    	
+    	ServerProperties serverProperties = null;
+       
+    	Optional<ServerRunner> serverRunnerOptional = findServerRunner(serverGame);
+    	
+    	if(serverRunnerOptional.isPresent()) {
+    		
+    		ServerRunner serverRunner = serverRunnerOptional.get();
+    		
+    		if(serverRunner.isRunning() && serverGame.getStatus().equals(Status.RUNNING)) {
+    			serverProperties = serverRunner.getServerProperties();
+    			
+    		} else {
+    			libraryRunning.remove(serverRunner);
+    			
+    			serverRunner = new ServerRunner(serverGame, localLibrary, new ServerRunnerListenerImpl());
+    			
+    			libraryRunning.add(serverRunner);
+    			
+    			serverRunner.start();
+    			
+    			serverProperties = serverRunner.getServerProperties();
+    		}
+    		
+    	} else {
+    		ServerRunner serverRunner = new ServerRunner(serverGame, localLibrary, new ServerRunnerListenerImpl());
+    		
+    		libraryRunning.add(serverRunner);
+			
+			serverRunner.start();
+			
+			serverProperties = serverRunner.getServerProperties();
+    	}
+    	
         if(serverProperties == null){
             throw new StartServerException();
         }
         
         return serverProperties;
+    }
+    
+    private Optional<ServerRunner> findServerRunner(ServerGame serverGame) {
+    	
+    	for(ServerRunner serverRunner : libraryRunning) {
+    		
+    		if(serverRunner.getServerGame().equals(serverGame)) {
+    			return Optional.of(serverRunner);
+    		}
+    	}
+    	
+    	return Optional.empty();
     }
     
     public ServerProperties startServer(String id) throws StartServerException {

@@ -5,6 +5,7 @@
  */
 package steamservermanager.view;
 
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -34,17 +35,6 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-        
-        DefaultTableModel model = (DefaultTableModel) jTableLibrary.getModel();
-        
-        String[] linha = {"teste"};
-        
-        model.addRow(linha);
-
-        jTableLibrary.setValueAt("asaaas", 0, 0);
-        
-        model.setRowCount(0);
-        
         setupTableRightClick();
     }
     
@@ -74,23 +64,43 @@ public class MainFrame extends javax.swing.JFrame {
                     Status status = getSelectedServer().getStatus();
                     
                     JMenuItem startItem = null;
+                    JMenuItem stopItem = null;
+                    JMenuItem consoleItem = null;
                     JMenuItem updateItem = null;
                     JMenuItem removeItem = null;
                     
                     if (status == Status.RUNNING || status == Status.STOPPED) {
                         if (status == Status.RUNNING) {
-                            startItem = new JMenuItem("Stop");
+                            consoleItem = new JMenuItem("Open Console");
+                            
+                            consoleItem.setFont(consoleItem.getFont().deriveFont(Font.BOLD));
+                            
+                            consoleItem.addActionListener((evt) -> {
+                                openConsoleSelectedServer();
+                            });
+                            
+                            popup.add(consoleItem);
+                            
+                            stopItem = new JMenuItem("Stop");
+                            
+                            stopItem.addActionListener((evt) -> {
+                                stopSelectedServer();
+                            });
+                            
+                            popup.add(stopItem);
+                            
                         } else {
                             startItem = new JMenuItem("Start");
+                            
+                            startItem.addActionListener((evt) -> {
+                                startSelectedServer();
+                            });
+                            
+                             popup.add(startItem);
                         }
-                        
-                        startItem.addActionListener((evt) -> {
-                            startSelectedServer();
-                        });
-                        
-                        popup.add(startItem);
-                        
+
                         updateItem = new JMenuItem("Update");
+                        
                         updateItem.addActionListener((evt) -> {
                             updateSelectedServer();
                         });
@@ -133,14 +143,12 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableLibrary = new javax.swing.JTable();
         jButtonNewServer = new javax.swing.JButton();
-        jButtonStartServer = new javax.swing.JButton();
         jProgressBarUpdate = new javax.swing.JProgressBar();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaSteamCMD = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
 
         jButtonOpenLibrary.setText("Open");
         jButtonOpenLibrary.addActionListener(new java.awt.event.ActionListener() {
@@ -195,34 +203,27 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jButtonStartServer.setText("Start");
-        jButtonStartServer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonStartServerActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator1)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButtonOpenLibrary)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelLocalLibrary)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jButtonNewServer, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 388, Short.MAX_VALUE)
-                        .addComponent(jButtonStartServer, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(320, 320, 320))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButtonOpenLibrary)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelLocalLibrary)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addComponent(jSeparator1)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,17 +232,12 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonOpenLibrary)
                     .addComponent(jLabelLocalLibrary))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonNewServer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonStartServer))))
-                .addGap(5, 5, 5)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonNewServer, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
@@ -262,14 +258,14 @@ public class MainFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -279,11 +275,11 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 886, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jTabbedPane1)
         );
 
         pack();
@@ -316,63 +312,75 @@ public class MainFrame extends javax.swing.JFrame {
         newServerFrame.setVisible(true);  
     }//GEN-LAST:event_jButtonNewServerActionPerformed
 
-    private void jButtonStartServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartServerActionPerformed
-        startSelectedServer();
-    }//GEN-LAST:event_jButtonStartServerActionPerformed
-
     private void startSelectedServer() {
         int jTableIndexSelected = jTableLibrary.getSelectedRow();
         
         if(jTableIndexSelected >= 0){
             try {
+                ServerGame serverGameSelected = getSelectedServer();
                 
-                ServerGame serverGameSelected = serverGameLibrary.get(jTableIndexSelected);
-                
-                ServerGameConsole serverGameConsoleFound = null;
-                
-                for(ServerGameConsole serverGameConsole : serverGameConsoleList){
-                    if(serverGameConsole.getServerProperties().getServerGame().equals(serverGameSelected)){
-                        serverGameConsoleFound = serverGameConsole;
-                        break;
-                    }
-                }
+                ServerGameConsole serverGameConsoleFound = getServerConsole(serverGameSelected);
                     
                 if(serverGameConsoleFound == null){
-                    
                     ServerProperties serverProperties = steamServerManager.startServer(serverGameSelected);
                 
                     ServerGameConsole serverGameConsole = new ServerGameConsole(serverProperties);
 
                     serverGameConsoleList.add(serverGameConsole);
-
-                    serverGameConsole.setVisible(true);
                     
                 } else {
-                    if(serverGameConsoleFound.getServerProperties().isRunning()){
+                    if(!serverGameConsoleFound.getServerProperties().isRunning()){
                         ServerProperties serverProperties = steamServerManager.startServer(serverGameSelected);
                         serverGameConsoleFound.setServerProperties(serverProperties);
-
-                        serverGameConsoleFound.setVisible(true);
-                    } else {
-                        serverGameConsoleFound.setVisible(true);
                     }
                 }
-  
+                
             } catch (StartServerException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        System.out.println(jTableIndexSelected);
+        
         updateJTableLibrary();
     }
     
+    private ServerGameConsole getServerConsole(ServerGame selectedServer){
+                
+        for(ServerGameConsole serverGameConsole : serverGameConsoleList){
+            if(serverGameConsole.getServerProperties().getServerGame().equals(selectedServer)){
+                return serverGameConsole;
+            }
+        }
+        
+        return null;
+    }
+    
     private void updateSelectedServer() {
+        ServerGame selectedServer = getSelectedServer();
+        
+        steamServerManager.updateServerGame(selectedServer);
+        
+        ServerGameConsole serverConsole = getServerConsole(selectedServer);
+        
+        if(serverConsole != null){
+            serverConsole.setVisible(false);
+        }
+    }
+    
+    private void stopSelectedServer(){
         
     }
     
     private void removeSelectedServer() {
         
+    }
+    
+    private void openConsoleSelectedServer() {
+        
+        ServerGameConsole serverConsole = getServerConsole(getSelectedServer());
+        
+        if(serverConsole != null){
+            serverConsole.setVisible(true);
+        }
     }
     
     private ServerGame getSelectedServer() {
@@ -423,7 +431,6 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonNewServer;
     private javax.swing.JButton jButtonOpenLibrary;
-    private javax.swing.JButton jButtonStartServer;
     private javax.swing.JLabel jLabelLocalLibrary;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
