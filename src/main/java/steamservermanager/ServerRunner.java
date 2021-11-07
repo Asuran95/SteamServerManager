@@ -23,14 +23,13 @@ import steamservermanager.models.ServerGame;
 
 class ServerRunner extends Thread {
 
-    private ServerGame serverGame;
-    private String localDir;
+    private final ServerGame serverGame;
+    private final String localDir;
+    private final ServerRunnerListener listener;
 
     private PtyProcess pty;
     private ServerGameMessageReceiver listenerStdOut;
     private boolean running = false;
-    
-    private ServerRunnerListener listener;
 
     public ServerRunner(ServerGame serverGame, String localDir, ServerRunnerListener listener) {
         this.serverGame = serverGame;
@@ -39,7 +38,7 @@ class ServerRunner extends Thread {
     }
 
     @SuppressWarnings("deprecation")
-	@Override
+    @Override
     public void run() {
         
         running = true;

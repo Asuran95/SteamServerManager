@@ -101,7 +101,7 @@ public class SteamServerManager {
 
     public void updateServerGame(ServerGame serverGame) {
         
-        for(ServerRunner serverRunner : libraryRunning){
+        for (ServerRunner serverRunner : libraryRunning){
             if(serverRunner.getServerGame().equals(serverGame) && serverRunner.isRunning()){
                 serverRunner.forceStop();
             }

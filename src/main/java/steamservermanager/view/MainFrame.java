@@ -5,13 +5,18 @@
  */
 package steamservermanager.view;
 
-import java.lang.reflect.Array;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import steamservermanager.Status;
 import steamservermanager.SteamServerManager;
 import steamservermanager.exceptions.StartServerException;
 import steamservermanager.interfaces.SteamServerManagerListener;
@@ -35,12 +40,70 @@ public class MainFrame extends javax.swing.JFrame {
         String[] linha = {"teste"};
         
         model.addRow(linha);
-        
-        
 
         jTableLibrary.setValueAt("asaaas", 0, 0);
         
         model.setRowCount(0);
+        
+        setupTableRightClick();
+    }
+    
+    private void setupTableRightClick() {
+        jTableLibrary.addMouseListener( new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    JTable source = (JTable) e.getSource();
+                    int row = source.rowAtPoint(e.getPoint());
+                    int column = source.columnAtPoint(e.getPoint());
+
+                    if (!source.isRowSelected(row))
+                        source.changeSelection(row, column, false, false);
+
+                    JPopupMenu popup = new JPopupMenu("Actions");
+              
+                    Status status = getSelectedServer().getStatus();
+                    
+                    JMenuItem startItem = null;
+                    JMenuItem updateItem = null;
+                    JMenuItem removeItem = null;
+                    
+                    if (status == Status.RUNNING || status == Status.STOPPED) {
+                        if (status == Status.RUNNING) {
+                            startItem = new JMenuItem("Stop");
+                        } else {
+                            startItem = new JMenuItem("Start");
+                        }
+                        
+                        startItem.addActionListener((evt) -> {
+                            startSelectedServer();
+                        });
+                        
+                        popup.add(startItem);
+                        
+                        updateItem = new JMenuItem("Update");
+                        updateItem.addActionListener((evt) -> {
+                            updateSelectedServer();
+                        });
+                        
+                        popup.add(updateItem);
+                    }
+                    
+                    if (status == Status.STOPPED) {
+                        removeItem = new JMenuItem("Remove");
+                        removeItem.addActionListener((evt) -> {
+                            removeSelectedServer();
+                        });
+                        
+                        popup.add(removeItem);
+                    }
+                    
+                    if (startItem != null || updateItem != null || removeItem != null) {
+                        popup.show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -239,14 +302,16 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonOpenLibraryActionPerformed
 
     private void jButtonNewServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewServerActionPerformed
-        
         NewServerFrame newServerFrame = new NewServerFrame(steamServerManager);
          
         newServerFrame.setVisible(true);  
     }//GEN-LAST:event_jButtonNewServerActionPerformed
 
     private void jButtonStartServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartServerActionPerformed
-        
+        startSelectedServer();
+    }//GEN-LAST:event_jButtonStartServerActionPerformed
+
+    private void startSelectedServer() {
         int jTableIndexSelected = jTableLibrary.getSelectedRow();
         
         if(jTableIndexSelected >= 0){
@@ -291,8 +356,26 @@ public class MainFrame extends javax.swing.JFrame {
 
         System.out.println(jTableIndexSelected);
         updateJTableLibrary();
-    }//GEN-LAST:event_jButtonStartServerActionPerformed
-
+    }
+    
+    private void updateSelectedServer() {
+        
+    }
+    
+    private void removeSelectedServer() {
+        
+    }
+    
+    private ServerGame getSelectedServer() {
+        int jTableIndexSelected = jTableLibrary.getSelectedRow();
+        
+        if (jTableIndexSelected != -1) {
+            return serverGameLibrary.get(jTableIndexSelected);
+        }
+        
+        return null;
+    }
+    
     /**
      * @param args the command line arguments
      */
