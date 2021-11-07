@@ -61,8 +61,8 @@ class ServerRunner extends Thread {
             InputStream stdout = pty.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stdout), 1);
             
-            listener.onServerStart(serverGame);
             serverGame.setStatus(Status.RUNNING);
+            listener.onServerStart(serverGame);
             
             while (true) {
                 String out = reader.readLine();

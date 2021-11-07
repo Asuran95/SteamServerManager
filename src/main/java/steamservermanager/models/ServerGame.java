@@ -9,16 +9,15 @@ public class ServerGame implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final String id = UUID.randomUUID().toString();
-    private int gameId;
+    private int appID;
     private final String serverName;
     private String startScript;
 
     private String gameName;
     private Status status;
 
-    public ServerGame(int gameId, String serverName, String startScript) {
-        super();
-        this.gameId = gameId;
+    public ServerGame(int appID, String serverName, String startScript) {
+        this.appID = appID;
         this.serverName = serverName;
         this.startScript = startScript;
     }
@@ -27,12 +26,12 @@ public class ServerGame implements Serializable {
         return id;
     }
 
-    public int getGameId() {
-        return gameId;
+    public int getAppID() {
+        return appID;
     }
 
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
+    public void setAppID(int appID) {
+        this.appID = appID;
     }
 
     public String getServerName() {

@@ -48,7 +48,7 @@ public class UpdateThread extends Thread {
                 }
 
                 steamCmd.forceInstallDir(localLibrary + File.separator + updateJob.getServerName());
-                steamCmd.appUpdate(updateJob.getGameId(), "validate");
+                steamCmd.appUpdate(updateJob.getAppID(), "validate");
 
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();

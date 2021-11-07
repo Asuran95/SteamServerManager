@@ -14,9 +14,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DefaultCaret;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
 import steamservermanager.Status;
 import steamservermanager.SteamServerManager;
 import steamservermanager.exceptions.StartServerException;
@@ -29,6 +32,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private SteamServerManager steamServerManager;
     private List<ServerGameConsole> serverGameConsoleList = new ArrayList<>();
+    private List<ServerGame> serverGameLibrary = new ArrayList<>();
+    private ServerGame serverGameAtual;
     
     /**
      * Creates new form MainFrame
@@ -36,6 +41,11 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         setupTableRightClick();
+        setLocationRelativeTo(null);
+        
+        DefaultCaret caret = (DefaultCaret) jTextAreaSteamCMD.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);  
+        setLocationRelativeTo(null);
     }
     
     private void setupTableRightClick() {
@@ -66,6 +76,7 @@ public class MainFrame extends javax.swing.JFrame {
                     JMenuItem startItem = null;
                     JMenuItem stopItem = null;
                     JMenuItem consoleItem = null;
+                    JMenuItem editItem = null;
                     JMenuItem updateItem = null;
                     JMenuItem removeItem = null;
                     
@@ -96,7 +107,23 @@ public class MainFrame extends javax.swing.JFrame {
                                 startSelectedServer();
                             });
                             
-                             popup.add(startItem);
+                            popup.add(startItem);
+                            
+                            editItem = new JMenuItem("Edit");
+                            
+                            editItem.addActionListener((evt) -> {
+                                editSelectedServer();
+                            });
+                            
+                            popup.add(editItem);
+                            
+                            removeItem = new JMenuItem("Remove");
+                            
+                            removeItem.addActionListener((evt) -> {
+                                removeSelectedServer();
+                            });
+
+                            popup.add(removeItem);
                         }
 
                         updateItem = new JMenuItem("Update");
@@ -106,15 +133,6 @@ public class MainFrame extends javax.swing.JFrame {
                         });
                         
                         popup.add(updateItem);
-                    }
-                    
-                    if (status == Status.STOPPED) {
-                        removeItem = new JMenuItem("Remove");
-                        removeItem.addActionListener((evt) -> {
-                            removeSelectedServer();
-                        });
-                        
-                        popup.add(removeItem);
                     }
                     
                     if (startItem != null || updateItem != null || removeItem != null) {
@@ -315,13 +333,13 @@ public class MainFrame extends javax.swing.JFrame {
     private void startSelectedServer() {
         int jTableIndexSelected = jTableLibrary.getSelectedRow();
         
-        if(jTableIndexSelected >= 0){
+        if (jTableIndexSelected >= 0){
             try {
                 ServerGame serverGameSelected = getSelectedServer();
                 
                 ServerGameConsole serverGameConsoleFound = getServerConsole(serverGameSelected);
                     
-                if(serverGameConsoleFound == null){
+                if (serverGameConsoleFound == null){
                     ServerProperties serverProperties = steamServerManager.startServer(serverGameSelected);
                 
                     ServerGameConsole serverGameConsole = new ServerGameConsole(serverProperties);
@@ -339,14 +357,12 @@ public class MainFrame extends javax.swing.JFrame {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        updateJTableLibrary();
     }
     
     private ServerGameConsole getServerConsole(ServerGame selectedServer){
                 
-        for(ServerGameConsole serverGameConsole : serverGameConsoleList){
-            if(serverGameConsole.getServerProperties().getServerGame().equals(selectedServer)){
+        for (ServerGameConsole serverGameConsole : serverGameConsoleList){
+            if (serverGameConsole.getServerProperties().getServerGame().equals(selectedServer)){
                 return serverGameConsole;
             }
         }
@@ -361,17 +377,28 @@ public class MainFrame extends javax.swing.JFrame {
         
         ServerGameConsole serverConsole = getServerConsole(selectedServer);
         
-        if(serverConsole != null){
+        if (serverConsole != null){
             serverConsole.setVisible(false);
         }
     }
     
     private void stopSelectedServer(){
         
+        ServerGameConsole serverConsole = getServerConsole(getSelectedServer());
+        
+        if (serverConsole != null){
+            serverConsole.forceStop();
+            serverConsole.setVisible(false);
+        }
     }
     
     private void removeSelectedServer() {
         
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove this server?","Warning", JOptionPane.YES_NO_OPTION);
+        
+        if (dialogResult == JOptionPane.YES_OPTION){
+            
+        }  
     }
     
     private void openConsoleSelectedServer() {
@@ -383,6 +410,13 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
+    private void editSelectedServer(){
+        
+        EditServerGameFrame editServerGameFrame = new EditServerGameFrame(getSelectedServer());
+        
+        editServerGameFrame.setVisible(true);
+    }
+
     private ServerGame getSelectedServer() {
         int jTableIndexSelected = jTableLibrary.getSelectedRow();
         
@@ -445,9 +479,6 @@ public class MainFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     
     
-    private List<ServerGame> serverGameLibrary = new ArrayList<>();
-    private ServerGame serverGameAtual;
-    
     public void updateJTableLibrary(){
         serverGameLibrary = steamServerManager.getLibrary();
         
@@ -458,7 +489,7 @@ public class MainFrame extends javax.swing.JFrame {
         for(ServerGame s : serverGameLibrary){
             System.out.println(s.getServerName());
             
-            String[] linha = { s.getServerName(), "", s.getGameId()+"", s.getStatus().toString() };
+            String[] linha = { s.getServerName(), "", s.getAppID()+"", s.getStatus().toString() };
         
             model.addRow(linha);
         }      
@@ -466,9 +497,19 @@ public class MainFrame extends javax.swing.JFrame {
     
     class SteamServerManagerListenerImpl implements SteamServerManagerListener{
 
+        private CircularFifoQueue<String> mensagemFifo = new CircularFifoQueue<>(500);
+        
         @Override
         public void onSteamCMDStdOut(String out) {
-            jTextAreaSteamCMD.setText(jTextAreaSteamCMD.getText() + out + "\n");     
+            mensagemFifo.add(out + "\n");
+            
+            StringBuilder stringBuilder = new StringBuilder();
+            
+            for(String msgFifo : mensagemFifo){
+                stringBuilder.append(msgFifo);
+            }
+
+            jTextAreaSteamCMD.setText(stringBuilder.toString());  
         }
 
         @Override
@@ -483,7 +524,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         @Override
         public void onStatusSteamCMD(String status, double pctUpdate) {
-            System.out.println(pctUpdate);
             
             jProgressBarUpdate.setStringPainted(true);
             
@@ -504,7 +544,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         @Override
         public void onCompleteUpdateServer() {
-            System.out.println("Atualização completa");
             serverGameAtual = null;
             jProgressBarUpdate.setString("");
             jProgressBarUpdate.setValue(0);

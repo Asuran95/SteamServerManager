@@ -117,11 +117,11 @@ public class SteamServerManager {
        
     	Optional<ServerRunner> serverRunnerOptional = findServerRunner(serverGame);
     	
-    	if(serverRunnerOptional.isPresent()) {
+    	if (serverRunnerOptional.isPresent()) {
     		
     		ServerRunner serverRunner = serverRunnerOptional.get();
     		
-    		if(serverRunner.isRunning() && serverGame.getStatus().equals(Status.RUNNING)) {
+    		if (serverRunner.isRunning() && serverGame.getStatus().equals(Status.RUNNING)) {
     			serverProperties = serverRunner.getServerProperties();
     			
     		} else {
@@ -149,6 +149,8 @@ public class SteamServerManager {
         if(serverProperties == null){
             throw new StartServerException();
         }
+        
+        listener.onUpdateServerStatus();
         
         return serverProperties;
     }
@@ -225,7 +227,8 @@ public class SteamServerManager {
 
         @Override
         public void onServerException(ServerGame serverGame) {
-            
+            libraryHelper.updateLibraryFile();
+            listener.onUpdateServerStatus();
         }     
     }
     
