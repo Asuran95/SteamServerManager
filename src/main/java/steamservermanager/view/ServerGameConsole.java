@@ -5,7 +5,7 @@
  */
 package steamservermanager.view;
 
-import steamservermanager.interfaces.StandardOutputInterface;
+import steamservermanager.interfaces.serverrunner.ServerGameMessageReceiver;
 
 /**
  *
@@ -63,7 +63,7 @@ public class ServerGameConsole extends javax.swing.JPanel {
     private javax.swing.JTextArea jTextAreaSteamCMD;
     // End of variables declaration//GEN-END:variables
 
-    class StandardOutputInterfaceImpl implements StandardOutputInterface{
+    class StandardOutputInterfaceImpl implements ServerGameMessageReceiver{
 
         @Override
         public void onOutput(String msg) {

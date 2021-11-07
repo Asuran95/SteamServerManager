@@ -13,8 +13,8 @@ import steamservermanager.exceptions.ServerNotRunningException;
 import steamservermanager.exceptions.StartServerException;
 import steamservermanager.interfaces.SteamServerManagerListener;
 import steamservermanager.interfaces.UpdateMonitorListener;
-import steamservermanager.interfaces.ServerProperties;
-import steamservermanager.interfaces.ServerRunnerListener;
+import steamservermanager.interfaces.serverrunner.ServerProperties;
+import steamservermanager.interfaces.serverrunner.ServerRunnerListener;
 
 public class SteamServerManager {
 

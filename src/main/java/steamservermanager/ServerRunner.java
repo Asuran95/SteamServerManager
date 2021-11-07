@@ -1,24 +1,25 @@
 package steamservermanager;
 
-import steamservermanager.models.ServerGame;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.pty4j.PtyProcess;
-import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import steamservermanager.interfaces.StandardInputInterface;
-import steamservermanager.interfaces.StandardOutputInterface;
-import steamservermanager.interfaces.ServerProperties;
-import steamservermanager.interfaces.ServerRunnerListener;
+
+import com.pty4j.PtyProcess;
+
+import steamservermanager.interfaces.serverrunner.ServerGameMessageReceiver;
+import steamservermanager.interfaces.serverrunner.ServerMessageDispatcher;
+import steamservermanager.interfaces.serverrunner.ServerProperties;
+import steamservermanager.interfaces.serverrunner.ServerRunnerListener;
+import steamservermanager.models.ServerGame;
 
 class ServerRunner extends Thread {
 
@@ -26,7 +27,7 @@ class ServerRunner extends Thread {
     private String localDir;
 
     private PtyProcess pty;
-    private StandardOutputInterface listenerStdOut;
+    private ServerGameMessageReceiver listenerStdOut;
     private boolean running = false;
     
     private ServerRunnerListener listener;
@@ -37,7 +38,8 @@ class ServerRunner extends Thread {
         this.listener = listener;
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void run() {
         
         running = true;
@@ -59,7 +61,6 @@ class ServerRunner extends Thread {
 
             InputStream stdout = pty.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stdout), 1);
-            
             
             listener.onServerStart(serverGame);
             serverGame.setStatus(Status.RUNNING);
@@ -101,7 +102,7 @@ class ServerRunner extends Thread {
 
         return new ServerProperties() {
             @Override
-            public StandardInputInterface setListener(StandardOutputInterface listenerImpl) {
+            public ServerMessageDispatcher setListener(ServerGameMessageReceiver listenerImpl) {
                 listenerStdOut = listenerImpl;
                 return new StandardInputImpl();
             }
@@ -118,7 +119,7 @@ class ServerRunner extends Thread {
         };
     }
 
-    class StandardInputImpl implements StandardInputInterface {
+    class StandardInputImpl implements ServerMessageDispatcher {
 
         @Override
         public void send(String command) {
@@ -134,6 +135,13 @@ class ServerRunner extends Thread {
                 Logger.getLogger(ServerRunner.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
+		@Override
+		public void stop() {
+			if(running) {
+				forceStop();
+			}
+		}
     }
 
     public ServerGame getServerGame() {

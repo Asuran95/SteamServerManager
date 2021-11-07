@@ -1,11 +1,11 @@
 
-package steamservermanager.interfaces;
+package steamservermanager.interfaces.serverrunner;
 
 import steamservermanager.models.ServerGame;
 
 public interface ServerProperties {
     
-    StandardInputInterface setListener(StandardOutputInterface listener);
+    ServerMessageDispatcher setListener(ServerGameMessageReceiver listener);
     ServerGame getServerGame();
     boolean isRunning();
 

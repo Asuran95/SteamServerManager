@@ -13,8 +13,8 @@ import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 import steamservermanager.SteamServerManager;
 import steamservermanager.exceptions.StartServerException;
-import steamservermanager.interfaces.ServerProperties;
 import steamservermanager.interfaces.SteamServerManagerListener;
+import steamservermanager.interfaces.serverrunner.ServerProperties;
 import steamservermanager.models.ServerGame;
 
 

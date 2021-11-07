@@ -1,5 +1,5 @@
 
-package steamservermanager.interfaces;
+package steamservermanager.interfaces.serverrunner;
 
 import steamservermanager.models.ServerGame;
 
