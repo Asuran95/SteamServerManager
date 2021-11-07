@@ -5,6 +5,7 @@
  */
 package steamservermanager.view;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,6 +22,7 @@ import steamservermanager.models.ServerGame;
 public class MainFrame extends javax.swing.JFrame {
 
     private SteamServerManager steamServerManager;
+    private List<ServerGameConsole> serverGameConsoleList = new ArrayList<>();
     
     /**
      * Creates new form MainFrame
@@ -50,6 +52,7 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jButtonOpenLibrary = new javax.swing.JButton();
@@ -248,24 +251,46 @@ public class MainFrame extends javax.swing.JFrame {
         
         if(jTableIndexSelected >= 0){
             try {
-                ServerProperties startServer = steamServerManager.startServer(serverGameLibrary.get(jTableIndexSelected));
                 
+                ServerGame serverGameSelected = serverGameLibrary.get(jTableIndexSelected);
                 
-                NewServerFrame newServerFrame = new NewServerFrame(steamServerManager);
-         
-                newServerFrame.setVisible(true);  
+                ServerGameConsole serverGameConsoleFound = null;
                 
+                for(ServerGameConsole serverGameConsole : serverGameConsoleList){
+                    if(serverGameConsole.getServerProperties().getServerGame().equals(serverGameSelected)){
+                        serverGameConsoleFound = serverGameConsole;
+                        break;
+                    }
+                }
+                    
+                if(serverGameConsoleFound == null){
+                    
+                    ServerProperties serverProperties = steamServerManager.startServer(serverGameSelected);
                 
-                
+                    ServerGameConsole serverGameConsole = new ServerGameConsole(serverProperties);
+
+                    serverGameConsoleList.add(serverGameConsole);
+
+                    serverGameConsole.setVisible(true);
+                    
+                } else {
+                    if(serverGameConsoleFound.getServerProperties().isRunning()){
+                        ServerProperties serverProperties = steamServerManager.startServer(serverGameSelected);
+                        serverGameConsoleFound.setServerProperties(serverProperties);
+
+                        serverGameConsoleFound.setVisible(true);
+                    } else {
+                        serverGameConsoleFound.setVisible(true);
+                    }
+                }
+  
             } catch (StartServerException ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        
+
         System.out.println(jTableIndexSelected);
-        
-        
+        updateJTableLibrary();
     }//GEN-LAST:event_jButtonStartServerActionPerformed
 
     /**
@@ -310,6 +335,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelLocalLibrary;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JProgressBar jProgressBarUpdate;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

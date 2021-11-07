@@ -22,8 +22,8 @@ public class UpdateThread extends Thread {
     public void run() {
 
         try {
-            //steamCmd = new SteamCMD(new listenerSteamCMD());
             steamCmd.loginAnonymous();
+            
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
