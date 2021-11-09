@@ -479,7 +479,7 @@ public class MainFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     
     
-    public void updateJTableLibrary(){
+    public synchronized void updateJTableLibrary(){
         serverGameLibrary = steamServerManager.getLibrary();
         
         DefaultTableModel model = (DefaultTableModel) jTableLibrary.getModel();
