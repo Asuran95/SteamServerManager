@@ -35,4 +35,11 @@
                 <version>4.4</version>
             </dependency>
 	</dependencies>
+	
+	<repositories>
+		<repository>
+			<id>jetbrains-intellij-dependencies</id>
+			<url>https://packages.jetbrains.team/maven/p/ij/intellij-dependencies</url>
+	    </repository>
+  	</repositories>
 </project>
