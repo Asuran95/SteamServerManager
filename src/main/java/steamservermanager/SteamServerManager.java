@@ -1,12 +1,12 @@
 package steamservermanager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 import steamcmd.SteamCMD;
+import steamcmd.SteamCMDBuilder;
 import steamcmd.SteamCMDListener;
 import steamservermanager.exceptions.ServerNameException;
 import steamservermanager.exceptions.ServerNotRunningException;
@@ -57,14 +57,13 @@ public class SteamServerManager {
 
     private void init() {
         updateMonitor = new UpdateMonitor(new UpdateMonitorListenerImpl());
-
-        try {
-            steamCmd = new SteamCMD(new ConsoleSteamCmdListener());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+        
+        SteamCMDBuilder builder = 
+        		new SteamCMDBuilder().addListener(new ConsoleSteamCmdListener());
+		
+		steamCmd = builder.build();
+		
+		steamCmd.start();
 
         updateThread = new UpdateThread(updateMonitor, localLibrary, steamCmd);
         updateThread.start();
@@ -259,6 +258,9 @@ public class SteamServerManager {
 
         @Override
         public void onStdOut(String out) {
+        	
+        	System.out.println(out);
+        	
             listener.onSteamCMDStdOut(out);
             
             if(out.contains("verifying") || out.contains("downloading")){

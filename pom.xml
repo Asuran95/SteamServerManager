@@ -9,8 +9,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>16</maven.compiler.source>
-		<maven.compiler.target>16</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 
 	<dependencies>
@@ -20,6 +20,14 @@
                 <artifactId>pty4j</artifactId>
                 <version>0.12.4</version>
             </dependency>
+            
+            <!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform -->
+			<dependency>
+			    <groupId>net.java.dev.jna</groupId>
+			    <artifactId>jna-platform</artifactId>
+			    <version>5.12.1</version>
+			</dependency>
+            
 
             <!-- https://mvnrepository.com/artifact/org.rauschig/jarchivelib -->
             <dependency>
@@ -40,6 +48,6 @@
 		<repository>
 			<id>jetbrains-intellij-dependencies</id>
 			<url>https://packages.jetbrains.team/maven/p/ij/intellij-dependencies</url>
-	    </repository>
-  	</repositories>
+		</repository>
+	</repositories>
 </project>

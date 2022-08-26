@@ -7,18 +7,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-
-import com.pty4j.PtyProcess;
 
 public class SteamCMDThread extends Thread {
 
 	private Semaphore semaphore;
 	private List<SteamCMDListener> listeners;
-	private PtyProcess pty;
+	private Process pty;
 
-	public SteamCMDThread(Semaphore semaphore, List<SteamCMDListener> listeners, PtyProcess pty) {
+	public SteamCMDThread(Semaphore semaphore, List<SteamCMDListener> listeners, Process pty) {
 		this.semaphore = semaphore;
 		this.listeners = listeners;
 		this.pty = pty;
@@ -27,18 +26,19 @@ public class SteamCMDThread extends Thread {
 	@Override
 	public void run() {
 		InputStream stdout = pty.getInputStream();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stdout), 1);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stdout, StandardCharsets.US_ASCII), 1);
 
 		try {
 			while (true) {
+				
 				String out = reader.readLine();
 
 				if (out == null) {
 					semaphore.release();
 					break;
-				} else if (out.contains("[1m")) {
-					// System.err.println("Unlock Sem");
+				} else if (out.contains("[1m") || (out.contains("[97m") && !out.contains("Steam>"))) {
 					semaphore.release();
+					
 				} else if (out.contains("code from your Steam Guard")
 						|| out.contains("This computer has not been authenticated")) {
 
@@ -68,6 +68,7 @@ public class SteamCMDThread extends Thread {
 					}
 				}
 			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

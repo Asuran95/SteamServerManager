@@ -1,10 +1,9 @@
 package steamservermanager;
 
-import steamservermanager.models.ServerGame;
 import java.io.File;
-import java.io.IOException;
 
 import steamcmd.SteamCMD;
+import steamservermanager.models.ServerGame;
 
 public class UpdateThread extends Thread {
 
@@ -20,16 +19,6 @@ public class UpdateThread extends Thread {
 
     @Override
     public void run() {
-
-        try {
-            steamCmd.loginAnonymous();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         while (true) {
             ServerGame updateJob = null;
 
@@ -39,20 +28,17 @@ public class UpdateThread extends Thread {
 
             System.out.println("Atualizando " + updateJob.getServerName());
 
-            try {
+            File localDir = new File(localLibrary + File.separator + updateJob.getServerName());
 
-                File localDir = new File(localLibrary + File.separator + updateJob.getServerName());
-
-                if (!localDir.exists()) {
-                    localDir.mkdir();
-                }
-
-                steamCmd.forceInstallDir(localLibrary + File.separator + updateJob.getServerName());
-                steamCmd.appUpdate(updateJob.getAppID(), "validate");
-
-            } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
+            if (!localDir.exists()) {
+                localDir.mkdir();
             }
+
+            steamCmd.forceInstallDir(localLibrary + File.separator + updateJob.getServerName());
+            
+            steamCmd.loginAnonymous();
+            
+            steamCmd.appUpdate(updateJob.getAppID(), "validate");
 
             monitor.completedUpdateJob(updateJob);
         }
