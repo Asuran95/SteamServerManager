@@ -78,7 +78,31 @@ public class SteamCMD implements Closeable {
 					Archiver archiver = ArchiverFactory.createArchiver("tar", "gz");
 					archiver.extract(zipFile, localFile);
 				}
+				
 			} else if (os.contains("win")) {
+				String localDir = System.getProperty("java.io.tmpdir") + "steamcmd" + File.separator;
+				String zipSteam = "steamcmd.zip";
+				String steamcmdURL = "https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip";
+				steamCmdLocal = localDir + "steamcmd.exe";
+
+				File shellSteamcmd = new File(steamCmdLocal);
+
+				if (!shellSteamcmd.exists()) {
+					File localFile = new File(localDir);
+					File zipFile = new File(localDir + zipSteam);
+
+					localFile.mkdir();
+
+					URL url = new URL(steamcmdURL);
+					ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+					FileOutputStream fos = new FileOutputStream(zipFile);
+					fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+					fos.close();
+					rbc.close();
+
+					Archiver archiver = ArchiverFactory.createArchiver("zip");
+					archiver.extract(zipFile, localFile);
+				}
 
 			}
 		}
