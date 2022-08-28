@@ -35,7 +35,7 @@ public class SteamCMDBuilder {
 	public SteamCMD build() {
 		
 		if (this.localDir == null) {
-			this.localDir = System.getProperty("java.io.tmpdir");
+			this.localDir = System.getProperty("java.io.tmpdir") + File.separator;
 		}
 		
 		this.localDir = this.localDir + "steamcmd" + File.separator;
