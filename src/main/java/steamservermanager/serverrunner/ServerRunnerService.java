@@ -65,8 +65,12 @@ public class ServerRunnerService {
             		serversRunning.remove(serverRunner);
             		serverRunner.forceStop();
             		
+            		break;
+            		
             	} else {
             		serversRunning.remove(serverRunner);
+            		
+            		break;
             	} 
             }
         }

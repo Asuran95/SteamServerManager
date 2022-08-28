@@ -66,12 +66,14 @@ public class ServerRunner extends Thread {
         	} else if (Platform.isWindows()) {
         		PtyProcessBuilder builder = new PtyProcessBuilder(commandBuffer.toArray(new String[0]))
         		        .setConsole(false)
-        		        .setCygwin(false)
         		        .setUseWinConPty(true);
 
             	this.process = builder.start();
         	}
-
+        	
+        	
+        	this.process.pid();
+        	
             InputStream stdout = process.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stdout), 1);
             
@@ -104,7 +106,7 @@ public class ServerRunner extends Thread {
     
     public void forceStop(){
         process.destroyForcibly();
-            
+
         serverGame.setStatus(Status.STOPPED);
         listener.onServerStopped(serverGame);
     }

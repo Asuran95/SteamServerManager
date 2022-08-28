@@ -54,6 +54,7 @@ public class SteamServerManager {
     }
 
     public void updateServerGame(ServerGame serverGame) {
+    	serverRunnerService.stopServer(serverGame);
     	updaterServerGameService.update(serverGame);
     }
 
