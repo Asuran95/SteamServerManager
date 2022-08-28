@@ -464,11 +464,6 @@ public class MainFrame extends javax.swing.JFrame {
         	} else if (Platform.isWindows()) {
         		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         	}
-        	
-        	for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-    			
-    			System.out.println(info.getClassName());
-            }
 
             
         } catch (ClassNotFoundException ex) {

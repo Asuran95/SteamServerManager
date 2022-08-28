@@ -71,9 +71,6 @@ public class ServerRunner extends Thread {
             	this.process = builder.start();
         	}
         	
-        	
-        	this.process.pid();
-        	
             InputStream stdout = process.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stdout), 1);
             
