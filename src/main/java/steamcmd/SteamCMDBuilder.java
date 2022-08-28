@@ -61,17 +61,27 @@ public class SteamCMDBuilder {
 			installSteamCMD(zipSteam, steamcmdURL);
 		}
 		
-		PtyProcessBuilder processBuilder = creatProcessBuilder(steamCmdLocal);
+		PtyProcessBuilder processBuilder = createProcessBuilder(steamCmdLocal);
 		
 		return new SteamCMD(processBuilder, listeners);
 	}
 	
-	private PtyProcessBuilder creatProcessBuilder(String steamCmdLocal) {
-		String[] commandLines = { steamCmdLocal };
+	private PtyProcessBuilder createProcessBuilder(String steamCmdLocal) {
 		
-		PtyProcessBuilder builder = new PtyProcessBuilder(commandLines)
-		        .setConsole(false)
-		        .setUseWinConPty(true);
+		PtyProcessBuilder builder = null;
+		
+		if (Platform.isLinux()) {
+			String[] commandLines = { steamCmdLocal };
+			
+    		builder = new PtyProcessBuilder(commandLines);
+    		
+    	} else if (Platform.isWindows()) {
+    		String[] commandLines = { steamCmdLocal };
+    		
+    		builder = new PtyProcessBuilder(commandLines)
+    		        .setConsole(false)
+    		        .setUseWinConPty(true);
+    	}
 		
 		return builder;
 	}

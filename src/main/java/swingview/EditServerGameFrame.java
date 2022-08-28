@@ -1,5 +1,5 @@
 
-package steamservermanager.view;
+package swingview;
 
 import steamservermanager.models.ServerGame;
 

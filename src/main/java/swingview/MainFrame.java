@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package steamservermanager.view;
+package swingview;
 
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -12,20 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
+
 import org.apache.commons.collections4.queue.CircularFifoQueue;
-import steamservermanager.Status;
+
+import com.sun.jna.Platform;
+
 import steamservermanager.SteamServerManager;
+import steamservermanager.SteamServerManagerBuilder;
 import steamservermanager.exceptions.StartServerException;
-import steamservermanager.interfaces.SteamServerManagerListener;
-import steamservermanager.interfaces.serverrunner.ServerProperties;
+import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
+import steamservermanager.serverrunner.interfaces.ServerProperties;
+import steamservermanager.utils.Status;
 
 
 public class MainFrame extends javax.swing.JFrame {
@@ -313,14 +320,20 @@ public class MainFrame extends javax.swing.JFrame {
         chooser.setAcceptAllFileFilterUsed(false);
            
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        	
+        	SteamServerManagerBuilder steamServerManagerBuilder = 
+        			new SteamServerManagerBuilder().setListener(new SteamServerManagerListenerImpl())
+        											.setLocalLibrary(chooser.getSelectedFile().toString());
             
-            steamServerManager = new SteamServerManager(chooser.getSelectedFile().toString());
+            steamServerManager = steamServerManagerBuilder.build();
             
-            steamServerManager.setListener(new SteamServerManagerListenerImpl());
+            steamServerManager.start();
             
             jLabelLocalLibrary.setText(chooser.getSelectedFile().toString());
             
             jButtonNewServer.setEnabled(true);
+            
+            updateJTableLibrary();
         }
     }//GEN-LAST:event_jButtonOpenLibraryActionPerformed
 
@@ -437,12 +450,27 @@ public class MainFrame extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+        	
+        	if (Platform.isLinux()) {
+        		for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+        			
+        			System.out.println(info.getClassName());
+        			
+                    if ("Nimbus".equals(info.getName())) {
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
+                    }
                 }
+        	} else if (Platform.isWindows()) {
+        		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        	}
+        	
+        	for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+    			
+    			System.out.println(info.getClassName());
             }
+
+            
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {

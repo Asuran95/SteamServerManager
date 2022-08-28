@@ -1,4 +1,4 @@
-package steamservermanager;
+package steamservermanager.serverrunner;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,22 +13,24 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.pty4j.PtyProcess;
+import com.pty4j.PtyProcessBuilder;
+import com.sun.jna.Platform;
 
-import steamservermanager.interfaces.serverrunner.ServerGameMessageReceiver;
-import steamservermanager.interfaces.serverrunner.ServerMessageDispatcher;
-import steamservermanager.interfaces.serverrunner.ServerProperties;
-import steamservermanager.interfaces.serverrunner.ServerRunnerListener;
+import steamservermanager.listeners.ServerGameConsoleListener;
 import steamservermanager.models.ServerGame;
+import steamservermanager.serverrunner.interfaces.ServerMessageDispatcher;
+import steamservermanager.serverrunner.interfaces.ServerProperties;
+import steamservermanager.serverrunner.listeners.ServerRunnerListener;
+import steamservermanager.utils.Status;
 
-class ServerRunner extends Thread {
+public class ServerRunner extends Thread {
 
     private final ServerGame serverGame;
     private final String localDir;
     private final ServerRunnerListener listener;
 
-    private PtyProcess pty;
-    private ServerGameMessageReceiver listenerStdOut;
+    private Process process;
+    private ServerGameConsoleListener listenerStdOut;
     private boolean running = false;
 
     public ServerRunner(ServerGame serverGame, String localDir, ServerRunnerListener listener) {
@@ -37,7 +39,6 @@ class ServerRunner extends Thread {
         this.listener = listener;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void run() {
         
@@ -56,13 +57,26 @@ class ServerRunner extends Thread {
         }
 
         try {
-            this.pty = PtyProcess.exec(commandBuffer.toArray(new String[0]));
+        	
+        	if (Platform.isLinux()) {
+        		PtyProcessBuilder builder = new PtyProcessBuilder(commandBuffer.toArray(new String[0]));
+        		
+        		this.process = builder.start();
+        		
+        	} else if (Platform.isWindows()) {
+        		PtyProcessBuilder builder = new PtyProcessBuilder(commandBuffer.toArray(new String[0]))
+        		        .setConsole(false)
+        		        .setCygwin(false)
+        		        .setUseWinConPty(true);
 
-            InputStream stdout = pty.getInputStream();
+            	this.process = builder.start();
+        	}
+
+            InputStream stdout = process.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stdout), 1);
             
             serverGame.setStatus(Status.RUNNING);
-            listener.onServerStart(serverGame);
+            listener.onServerStarted(serverGame);
             
             while (true) {
                 String out = reader.readLine();
@@ -80,14 +94,16 @@ class ServerRunner extends Thread {
 
         } catch (IOException e) {
             running = false;
+            serverGame.setStatus(Status.STOPPED);
             listener.onServerException(serverGame);
-        } finally {
-            forceStop();
         }
+        
+        serverGame.setStatus(Status.STOPPED);
+        listener.onServerStopped(serverGame);
     }
     
     public void forceStop(){
-        pty.destroyForcibly();
+        process.destroyForcibly();
             
         serverGame.setStatus(Status.STOPPED);
         listener.onServerStopped(serverGame);
@@ -101,7 +117,7 @@ class ServerRunner extends Thread {
 
         return new ServerProperties() {
             @Override
-            public ServerMessageDispatcher setListener(ServerGameMessageReceiver listenerImpl) {
+            public ServerMessageDispatcher setListener(ServerGameConsoleListener listenerImpl) {
                 listenerStdOut = listenerImpl;
                 return new StandardInputImpl();
             }
@@ -123,13 +139,12 @@ class ServerRunner extends Thread {
         @Override
         public void send(String command) {
             try {
-                OutputStream stdin = pty.getOutputStream();
+                OutputStream stdin = process.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdin));
-
-                System.out.println(command);
 
                 writer.write(command + "\n");
                 writer.flush();
+                
             } catch (IOException ex) {
                 Logger.getLogger(ServerRunner.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -1,5 +1,9 @@
-package steamservermanager;
+package steamservermanager.utils;
 
 public enum Status {
-    INSTALLING, UPDATING, RUNNING, STOPPED, WAITING
+    INSTALLING, 
+    UPDATING, 
+    RUNNING, 
+    STOPPED, 
+    WAITING
 }

@@ -37,6 +37,14 @@ public class SteamCMD implements Closeable {
 		}
 	}
 	
+	public void stop() {
+		try {
+			quit();
+			process.destroyForcibly();
+			
+		} catch (Exception e) {}
+	}
+	
 	private Process startSteamCMD(PtyProcessBuilder processBuilder) {
 		PtyProcess process = null;
 		

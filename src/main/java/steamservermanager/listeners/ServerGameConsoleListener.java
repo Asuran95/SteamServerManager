@@ -1,5 +1,7 @@
-package steamservermanager.interfaces.serverrunner;
+package steamservermanager.listeners;
 
-public interface ServerGameMessageReceiver {
-    void onOutput(String msg);
+public interface ServerGameConsoleListener {
+    
+	void onOutput(String msg);
+	
 }

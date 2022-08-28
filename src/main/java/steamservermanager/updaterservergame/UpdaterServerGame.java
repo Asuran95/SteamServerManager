@@ -1,17 +1,30 @@
-package steamservermanager;
+package steamservermanager.updaterservergame;
 
-import steamservermanager.models.ServerGame;
 import java.util.ArrayList;
 import java.util.List;
-import steamservermanager.interfaces.UpdateMonitorListener;
 
-public class UpdateMonitor {
+import steamcmd.SteamCMD;
+import steamservermanager.models.ServerGame;
+import steamservermanager.updaterservergame.listeners.UpdateMonitorListener;
+import steamservermanager.utils.Status;
+
+public class UpdaterServerGame {
 
     private List<ServerGame> updateList = new ArrayList<>();
     private UpdateMonitorListener listener;
+    private SteamCMD steamCmd;
+    private String localLibrary;
+    private UpdateWorker updateThread;
 
-    public UpdateMonitor(UpdateMonitorListener listener) {
+    public UpdaterServerGame(UpdateMonitorListener listener, SteamCMD steamCmd, String localLibrary) {
         this.listener = listener;
+        this.steamCmd = steamCmd;
+        this.localLibrary = localLibrary;
+    }
+    
+    public void startUpdater() {
+    	updateThread = new UpdateWorker(this, localLibrary, steamCmd);
+        updateThread.start();
     }
     
     public void addUpdate(ServerGame serverGame) {
@@ -21,7 +34,7 @@ public class UpdateMonitor {
         updateList.add(serverGame);
         
         listener.onNewUpdate(serverGame);
-
+        
         synchronized (this) {
             notify();
         }
@@ -30,9 +43,12 @@ public class UpdateMonitor {
     public ServerGame getUpdateJob() {
 
         if (updateList.size() == 0) {
+        	
+        	steamCmd.stop();
+        	
             try {
-                System.out.println("Aguardando");
                 wait();
+                
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -49,7 +65,7 @@ public class UpdateMonitor {
 
         serverGame.setStatus(Status.STOPPED);
 
-        listener.onCompleteJob(serverGame);
+        listener.onCompletedUpdate(serverGame);
             
         updateList.remove(serverGame);
     }

@@ -1,4 +1,4 @@
-package steamservermanager;
+package steamservermanager.utils;
 
 import steamservermanager.models.ServerGame;
 import java.io.File;

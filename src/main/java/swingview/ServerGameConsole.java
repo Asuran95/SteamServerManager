@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package steamservermanager.view;
+package swingview;
 
 
 import javax.swing.text.DefaultCaret;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
-import steamservermanager.interfaces.serverrunner.ServerGameMessageReceiver;
-import steamservermanager.interfaces.serverrunner.ServerMessageDispatcher;
-import steamservermanager.interfaces.serverrunner.ServerProperties;
+import steamservermanager.listeners.ServerGameConsoleListener;
+import steamservermanager.serverrunner.interfaces.ServerMessageDispatcher;
+import steamservermanager.serverrunner.interfaces.ServerProperties;
 
 /**
  *
@@ -117,7 +117,7 @@ public class ServerGameConsole extends javax.swing.JFrame {
         serverMessageDispatcher.stop();
     }
     
-    class StandardOutputInterfaceImpl implements ServerGameMessageReceiver{
+    class StandardOutputInterfaceImpl implements ServerGameConsoleListener{
 
         CircularFifoQueue<String> mensagemFifo = new CircularFifoQueue<>(500);
         
