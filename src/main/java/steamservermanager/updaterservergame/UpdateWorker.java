@@ -24,13 +24,13 @@ public class UpdateWorker extends Thread {
             
             steamCmd.start();
 
-            File localDir = new File(localLibrary + File.separator + updateJob.getServerName());
+            File localDir = new File(localLibrary + File.separator + updateJob.getLocalName());
 
             if (!localDir.exists()) {
                 localDir.mkdir();
             }
 
-            steamCmd.forceInstallDir(localLibrary + File.separator + updateJob.getServerName());
+            steamCmd.forceInstallDir(localLibrary + File.separator + updateJob.getLocalName());
             steamCmd.loginAnonymous();
             steamCmd.appUpdate(updateJob.getAppID(), "validate");
             steamCmd.logout();

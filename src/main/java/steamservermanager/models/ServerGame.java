@@ -1,65 +1,96 @@
 package steamservermanager.models;
 
-import java.io.Serializable;
-import java.util.UUID;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 import steamservermanager.utils.Status;
 
-public class ServerGame implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    private final String id = UUID.randomUUID().toString();
-    private int appID;
-    private final String serverName;
+@Entity
+public class ServerGame {
+	
+	@Id
+	@GeneratedValue
+    private Long idServerGame;
+    
+    private Integer appID;
+    
+    private String localName;
+    
+    private String serverName;
+    
+    private String description;
+    
     private String startScript;
-
+    
     private String gameName;
+    
+    @Enumerated(EnumType.STRING)
     private Status status;
 
-    public ServerGame(int appID, String serverName, String startScript) {
-        this.appID = appID;
-        this.serverName = serverName;
-        this.startScript = startScript;
-    }
+	public Long getIdServerGame() {
+		return idServerGame;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public void setIdServerGame(Long idServerGame) {
+		this.idServerGame = idServerGame;
+	}
 
-    public int getAppID() {
-        return appID;
-    }
+	public Integer getAppID() {
+		return appID;
+	}
 
-    public void setAppID(int appID) {
-        this.appID = appID;
-    }
+	public void setAppID(Integer appID) {
+		this.appID = appID;
+	}
 
-    public String getServerName() {
-        return serverName;
-    }
+	public String getLocalName() {
+		return localName;
+	}
 
-    public String getStartScript() {
-        return startScript;
-    }
+	public void setLocalName(String localName) {
+		this.localName = localName;
+	}
 
-    public void setStartScript(String startScript) {
-        this.startScript = startScript;
-    }
+	public String getServerName() {
+		return serverName;
+	}
 
-    public String getGameName() {
-        return gameName;
-    }
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public Status getStatus() {
-        return status;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+	public String getStartScript() {
+		return startScript;
+	}
+
+	public void setStartScript(String startScript) {
+		this.startScript = startScript;
+	}
+
+	public String getGameName() {
+		return gameName;
+	}
+
+	public void setGameName(String gameName) {
+		this.gameName = gameName;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 }

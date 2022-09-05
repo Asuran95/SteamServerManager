@@ -3,6 +3,7 @@ package steamcmd;
 import java.io.IOException;
 import java.util.Scanner;
 
+
 public class MainSteamCMD {
 
 	public static void main(String[] args) throws IOException, InterruptedException {

@@ -2,12 +2,12 @@
 package steamservermanager.serverrunner.interfaces;
 
 import steamservermanager.listeners.ServerGameConsoleListener;
-import steamservermanager.models.ServerGame;
+import steamservermanager.vos.ServerGameVO;
 
 public interface ServerProperties {
     ServerMessageDispatcher setListener(ServerGameConsoleListener listener);
     
-    ServerGame getServerGame();
+    ServerGameVO getServerGame();
     
     boolean isRunning();
 }

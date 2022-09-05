@@ -114,7 +114,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelLocalLibrary">
               <Properties>
-                <Property name="text" type="java.lang.String" value="No directory selected!"/>
+                <Property name="text" type="java.lang.String" value="No directory selected"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JSeparator" name="jSeparator1">

@@ -1,36 +1,36 @@
 package steamservermanager.events;
 
+import steamservermanager.eao.SteamServerManagerEAO;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
 import steamservermanager.updaterservergame.listeners.UpdateMonitorListener;
-import steamservermanager.utils.LibraryFileHelper;
 
 public class UpdateMonitorEventManager implements UpdateMonitorListener {
 
-	private LibraryFileHelper libraryFileHelper;
+	private SteamServerManagerEAO steamServerManagerEAO;
 	private SteamServerManagerListener steamServerManagerListener;
 	
-	public UpdateMonitorEventManager(LibraryFileHelper libraryFileHelper, SteamServerManagerListener steamServerManagerListener) {
-		this.libraryFileHelper = libraryFileHelper;
+	public UpdateMonitorEventManager(SteamServerManagerEAO steamServerManagerEAO, SteamServerManagerListener steamServerManagerListener) {
+		this.steamServerManagerEAO = steamServerManagerEAO;
 		this.steamServerManagerListener = steamServerManagerListener;
 	}
 
 	@Override
-    public void onNewUpdate(ServerGame server) {
-		libraryFileHelper.updateLibraryFile();
+    public void onNewUpdate(ServerGame serverGame) {
+		steamServerManagerEAO.persistServerGame(serverGame);
 		steamServerManagerListener.onUpdateServerStatus();
     }
 
     @Override
-    public void onGetUpdateJob(ServerGame server) {
-    	libraryFileHelper.updateLibraryFile();
+    public void onGetUpdateJob(ServerGame serverGame) {
+    	steamServerManagerEAO.persistServerGame(serverGame);
     	steamServerManagerListener.onUpdateServerStatus();
-    	steamServerManagerListener.onUpdateServer(server);
+    	steamServerManagerListener.onUpdateServer(serverGame);
     }
 
     @Override
-    public void onCompletedUpdate(ServerGame server) {
-    	libraryFileHelper.updateLibraryFile();
+    public void onCompletedUpdate(ServerGame serverGame) {
+    	steamServerManagerEAO.persistServerGame(serverGame);
     	steamServerManagerListener.onUpdateServerStatus();
         steamServerManagerListener.onCompleteUpdateServer();
     }  

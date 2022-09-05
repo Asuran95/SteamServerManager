@@ -31,7 +31,7 @@ public class ServerGameConsole extends javax.swing.JFrame {
         this.serverProperties = serverProperties;
         this.standardOutputInterfaceImpl = new StandardOutputInterfaceImpl();
         this.serverMessageDispatcher = serverProperties.setListener(standardOutputInterfaceImpl);
-        setTitle(serverProperties.getServerGame().getServerName());
+        setTitle(serverProperties.getServerGame().getLocalName());
         
         DefaultCaret caret = (DefaultCaret) jTextAreaSteamCMD.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);  

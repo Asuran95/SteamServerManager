@@ -1,13 +1,18 @@
 package steamservermanager;
 
-import java.util.List;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import steamservermanager.eao.SteamServerManagerEAO;
 import steamservermanager.events.EventManager;
 import steamservermanager.listeners.SteamServerManagerListener;
-import steamservermanager.models.ServerGame;
 import steamservermanager.serverrunner.ServerRunnerService;
 import steamservermanager.updaterservergame.UpdaterServerGameService;
-import steamservermanager.utils.LibraryFileHelper;
 
 public class SteamServerManagerBuilder {
 	
@@ -28,14 +33,23 @@ public class SteamServerManagerBuilder {
 	}
 	
 	public SteamServerManager build() {
-		LibraryFileHelper libraryHelper = new LibraryFileHelper(localLibrary);
+		SteamServerManagerEAO steamServerManagerEAO = setupSteamServerManagerEAO(localLibrary);
+
+		EventManager eventManager = new EventManager(steamServerManagerEAO, listener);
 		
-		List<ServerGame> serverGameLibrary = libraryHelper.loadLibraryFromDisk();
-		
-		EventManager eventManager = new EventManager(libraryHelper, listener);
 		UpdaterServerGameService updaterServerGameService = new UpdaterServerGameService(localLibrary, eventManager);
 		ServerRunnerService serverRunnerService = new ServerRunnerService(localLibrary, eventManager);
 
-		return new SteamServerManager(serverGameLibrary, updaterServerGameService, serverRunnerService);
+		return new SteamServerManager(updaterServerGameService, serverRunnerService, steamServerManagerEAO);
+	}
+	
+	private SteamServerManagerEAO setupSteamServerManagerEAO(String localLibrary) {
+		Map<String, String> properties = new HashMap<>();
+		properties.put("hibernate.connection.url", "jdbc:sqlite:" + localLibrary + File.separator + "SteamServerManager.db");
+		
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("SteamServerManager", properties);
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		
+		return new SteamServerManagerEAO(entityManager);
 	}
 }

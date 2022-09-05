@@ -5,9 +5,9 @@ import steamservermanager.models.ServerGame;
 
 public interface UpdateMonitorListener {
     
-	void onNewUpdate(ServerGame server);
+	void onNewUpdate(ServerGame serverGame);
     
-    void onGetUpdateJob(ServerGame server);
+    void onGetUpdateJob(ServerGame serverGame);
     
-    void onCompletedUpdate(ServerGame server);
+    void onCompletedUpdate(ServerGame serverGame);
 }

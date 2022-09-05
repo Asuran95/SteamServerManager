@@ -1,13 +1,13 @@
 
 package swingview;
 
-import steamservermanager.models.ServerGame;
+import steamservermanager.vos.ServerGameVO;
 
 public class EditServerGameFrame extends javax.swing.JFrame {
 
-    private ServerGame serverGame;
+    private ServerGameVO serverGame;
     
-    public EditServerGameFrame(ServerGame serverGame) {
+    public EditServerGameFrame(ServerGameVO serverGame) {
         initComponents();
         this.serverGame = serverGame;
         setLocationRelativeTo(null);
@@ -151,7 +151,7 @@ public class EditServerGameFrame extends javax.swing.JFrame {
         
         String serverName = jTextFieldServerName.getText();
         
-        if(!serverGame.getServerName().equals(serverName)){
+        if(!serverGame.getLocalName().equals(serverName)){
             System.out.println("Atualizar server name");
         }
         
@@ -165,7 +165,7 @@ public class EditServerGameFrame extends javax.swing.JFrame {
     private void populateFields(){
         jLabelAppID.setText(serverGame.getAppID()+"");
         jTextFieldStartScript.setText(serverGame.getStartScript());
-        jTextFieldServerName.setText(serverGame.getServerName());
+        jTextFieldServerName.setText(serverGame.getLocalName());
         jTextFieldGame.setText(serverGame.getGameName());
     }
     

@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import steamservermanager.SteamServerManager;
-import steamservermanager.exceptions.ServerNameException;
+import steamservermanager.exceptions.ServerLocalNameDuplicatedException;
 
 /**
  *
@@ -158,9 +158,10 @@ public class NewServerFrame extends javax.swing.JFrame {
         String startScript = jTextFieldStartScript.getText();
         
         try {
-            manager.newServerGame(gameId, serverName, startScript);
-        } catch (ServerNameException ex) {
-            JOptionPane.showMessageDialog(null, "Invalid Server Name id! \n Esse nome já está sendo utilizado", "ERROR!", JOptionPane.ERROR_MESSAGE);
+            manager.create(gameId, serverName, startScript);
+            
+        } catch (ServerLocalNameDuplicatedException ex) {
+            JOptionPane.showMessageDialog(null, "Invalid Server Name id! \n Esse nome já está sendo utilizado", "ERROR", JOptionPane.ERROR_MESSAGE);
             return;
         }
         

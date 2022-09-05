@@ -1,36 +1,36 @@
 package steamservermanager.events;
 
+import steamservermanager.eao.SteamServerManagerEAO;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
 import steamservermanager.serverrunner.listeners.ServerRunnerListener;
-import steamservermanager.utils.LibraryFileHelper;
 
 public class ServerRunnerEventManager implements ServerRunnerListener {
 
-	private LibraryFileHelper libraryFileHelper;
+	private SteamServerManagerEAO steamServerManagerEAO;
 	private SteamServerManagerListener steamServerManagerListener;
 	
 	
-	public ServerRunnerEventManager(LibraryFileHelper libraryFileHelper, SteamServerManagerListener steamServerManagerListener) {
-		this.libraryFileHelper = libraryFileHelper;
+	public ServerRunnerEventManager(SteamServerManagerEAO steamServerManagerEAO, SteamServerManagerListener steamServerManagerListener) {
+		this.steamServerManagerEAO = steamServerManagerEAO;
 		this.steamServerManagerListener = steamServerManagerListener;
 	}
 
 	@Override
     public void onServerStarted(ServerGame serverGame) {
-		libraryFileHelper.updateLibraryFile();
+		steamServerManagerEAO.persistServerGame(serverGame);
 		steamServerManagerListener.onUpdateServerStatus();
     }
 
     @Override
     public void onServerStopped(ServerGame serverGame) {
-    	libraryFileHelper.updateLibraryFile();
+    	steamServerManagerEAO.persistServerGame(serverGame);
     	steamServerManagerListener.onUpdateServerStatus();
     }
 
     @Override
     public void onServerException(ServerGame serverGame) {
-    	libraryFileHelper.updateLibraryFile();
+    	steamServerManagerEAO.persistServerGame(serverGame);
     	steamServerManagerListener.onUpdateServerStatus();
     }   
 

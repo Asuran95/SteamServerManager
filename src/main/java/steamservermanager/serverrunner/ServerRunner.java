@@ -21,7 +21,9 @@ import steamservermanager.models.ServerGame;
 import steamservermanager.serverrunner.interfaces.ServerMessageDispatcher;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
 import steamservermanager.serverrunner.listeners.ServerRunnerListener;
+import steamservermanager.utils.ObjectUtils;
 import steamservermanager.utils.Status;
+import steamservermanager.vos.ServerGameVO;
 
 public class ServerRunner extends Thread {
 
@@ -48,7 +50,7 @@ public class ServerRunner extends Thread {
 
         String[] scriptSplit = serverGame.getStartScript().split(" ");
 
-        String pathServer = localDir + File.separator + serverGame.getServerName() + File.separator + scriptSplit[0];
+        String pathServer = localDir + File.separator + serverGame.getLocalName() + File.separator + scriptSplit[0];
 
         commandBuffer.add(pathServer);
 
@@ -122,8 +124,8 @@ public class ServerRunner extends Thread {
             }
 
             @Override
-            public ServerGame getServerGame() {
-                return serverGame;
+            public ServerGameVO getServerGame() {
+                return ObjectUtils.copyObject(serverGame, ServerGameVO.class);
             }
 
             @Override

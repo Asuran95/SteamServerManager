@@ -1,10 +1,10 @@
 package steamservermanager.events;
 
 import steamcmd.SteamCMDListener;
+import steamservermanager.eao.SteamServerManagerEAO;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.serverrunner.listeners.ServerRunnerListener;
 import steamservermanager.updaterservergame.listeners.UpdateMonitorListener;
-import steamservermanager.utils.LibraryFileHelper;
 
 public class EventManager {
 	
@@ -12,10 +12,10 @@ public class EventManager {
 	private SteamCMDListener steamCMDListener;
 	private UpdateMonitorListener updateMonitorListener;
 	
-	public EventManager(LibraryFileHelper libraryFileHelper, SteamServerManagerListener steamServerManagerListener) {
-		this.serverRunnerListener = new ServerRunnerEventManager(libraryFileHelper, steamServerManagerListener);
+	public EventManager(SteamServerManagerEAO steamServerManagerEAO, SteamServerManagerListener steamServerManagerListener) {
+		this.serverRunnerListener = new ServerRunnerEventManager(steamServerManagerEAO, steamServerManagerListener);
 		this.steamCMDListener = new SteamCMDEventManager(steamServerManagerListener);
-		this.updateMonitorListener = new UpdateMonitorEventManager(libraryFileHelper, steamServerManagerListener);
+		this.updateMonitorListener = new UpdateMonitorEventManager(steamServerManagerEAO, steamServerManagerListener);
 	}
 
 	public ServerRunnerListener getServerRunnerListener() {

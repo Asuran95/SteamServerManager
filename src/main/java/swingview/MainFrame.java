@@ -10,14 +10,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
@@ -28,18 +27,18 @@ import com.sun.jna.Platform;
 
 import steamservermanager.SteamServerManager;
 import steamservermanager.SteamServerManagerBuilder;
-import steamservermanager.exceptions.StartServerException;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
 import steamservermanager.utils.Status;
+import steamservermanager.vos.ServerGameVO;
 
 
 public class MainFrame extends javax.swing.JFrame {
 
     private SteamServerManager steamServerManager;
     private List<ServerGameConsole> serverGameConsoleList = new ArrayList<>();
-    private List<ServerGame> serverGameLibrary = new ArrayList<>();
+    private List<ServerGameVO> serverGameLibrary = new ArrayList<>();
     private ServerGame serverGameAtual;
     
     /**
@@ -182,7 +181,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabelLocalLibrary.setText("No directory selected!");
+        jLabelLocalLibrary.setText("No directory selected");
 
         jTableLibrary.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -327,7 +326,7 @@ public class MainFrame extends javax.swing.JFrame {
             
             steamServerManager = steamServerManagerBuilder.build();
             
-            steamServerManager.start();
+            steamServerManager.startManager();
             
             jLabelLocalLibrary.setText(chooser.getSelectedFile().toString());
             
@@ -347,32 +346,27 @@ public class MainFrame extends javax.swing.JFrame {
         int jTableIndexSelected = jTableLibrary.getSelectedRow();
         
         if (jTableIndexSelected >= 0){
-            try {
-                ServerGame serverGameSelected = getSelectedServer();
+        	ServerGameVO serverGameSelected = getSelectedServer();
+            
+            ServerGameConsole serverGameConsoleFound = getServerConsole(serverGameSelected);
                 
-                ServerGameConsole serverGameConsoleFound = getServerConsole(serverGameSelected);
-                    
-                if (serverGameConsoleFound == null){
-                    ServerProperties serverProperties = steamServerManager.startServer(serverGameSelected);
-                
-                    ServerGameConsole serverGameConsole = new ServerGameConsole(serverProperties);
+            if (serverGameConsoleFound == null){
+                ServerProperties serverProperties = steamServerManager.start(serverGameSelected);
+            
+                ServerGameConsole serverGameConsole = new ServerGameConsole(serverProperties);
 
-                    serverGameConsoleList.add(serverGameConsole);
-                    
-                } else {
-                    if(!serverGameConsoleFound.getServerProperties().isRunning()){
-                        ServerProperties serverProperties = steamServerManager.startServer(serverGameSelected);
-                        serverGameConsoleFound.setServerProperties(serverProperties);
-                    }
-                }
+                serverGameConsoleList.add(serverGameConsole);
                 
-            } catch (StartServerException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } else {
+                if(!serverGameConsoleFound.getServerProperties().isRunning()){
+                    ServerProperties serverProperties = steamServerManager.start(serverGameSelected);
+                    serverGameConsoleFound.setServerProperties(serverProperties);
+                }
             }
         }
     }
     
-    private ServerGameConsole getServerConsole(ServerGame selectedServer){
+    private ServerGameConsole getServerConsole(ServerGameVO selectedServer){
                 
         for (ServerGameConsole serverGameConsole : serverGameConsoleList){
             if (serverGameConsole.getServerProperties().getServerGame().equals(selectedServer)){
@@ -384,9 +378,9 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     private void updateSelectedServer() {
-        ServerGame selectedServer = getSelectedServer();
+    	ServerGameVO selectedServer = getSelectedServer();
         
-        steamServerManager.updateServerGame(selectedServer);
+        steamServerManager.update(selectedServer);
         
         ServerGameConsole serverConsole = getServerConsole(selectedServer);
         
@@ -430,7 +424,7 @@ public class MainFrame extends javax.swing.JFrame {
         editServerGameFrame.setVisible(true);
     }
 
-    private ServerGame getSelectedServer() {
+    private ServerGameVO getSelectedServer() {
         int jTableIndexSelected = jTableLibrary.getSelectedRow();
         
         if (jTableIndexSelected != -1) {
@@ -457,13 +451,16 @@ public class MainFrame extends javax.swing.JFrame {
         			System.out.println(info.getClassName());
         			
                     if ("Nimbus".equals(info.getName())) {
-                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        //javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+                    	UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
                         break;
                     }
                 }
         	} else if (Platform.isWindows()) {
         		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         	}
+        	
+        	//UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
 
             
         } catch (ClassNotFoundException ex) {
@@ -503,19 +500,34 @@ public class MainFrame extends javax.swing.JFrame {
     
     
     public synchronized void updateJTableLibrary(){
-        serverGameLibrary = steamServerManager.getLibrary();
-        
-        DefaultTableModel model = (DefaultTableModel) jTableLibrary.getModel();
-        
-        model.setRowCount(0);
-        
-        for(ServerGame s : serverGameLibrary){
-            System.out.println(s.getServerName());
-            
-            String[] linha = { s.getServerName(), "", s.getAppID()+"", s.getStatus().toString() };
-        
-            model.addRow(linha);
-        }      
+    	SwingUtilities.invokeLater(() -> {
+    		
+//    		try {
+//				UIManager.setLookAndFeel("com.jtattoo.plaf.luna.LunaLookAndFeel");
+//				
+//				
+//				SwingUtilities.updateComponentTreeUI(this);
+//				
+//			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+//					| UnsupportedLookAndFeelException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+    		
+			serverGameLibrary = steamServerManager.getServerList();
+	        
+	        DefaultTableModel model = (DefaultTableModel) jTableLibrary.getModel();
+	        
+	        model.setRowCount(0);
+	        
+	        for (ServerGameVO s : serverGameLibrary){
+	            System.out.println(s.getLocalName());
+	            
+	            String[] linha = { s.getLocalName(), "", s.getAppID()+"", s.getStatus().toString() };
+	        
+	            model.addRow(linha);
+	        }
+		});       
     }
     
     class SteamServerManagerListenerImpl implements SteamServerManagerListener{
@@ -551,7 +563,7 @@ public class MainFrame extends javax.swing.JFrame {
             jProgressBarUpdate.setStringPainted(true);
             
             if(serverGameAtual != null){
-                jProgressBarUpdate.setString(serverGameAtual.getServerName() + " - " + status + ": " + pctUpdate + "%");
+                jProgressBarUpdate.setString(serverGameAtual.getLocalName() + " - " + status + ": " + pctUpdate + "%");
             } else {
                 jProgressBarUpdate.setString("");
             }
