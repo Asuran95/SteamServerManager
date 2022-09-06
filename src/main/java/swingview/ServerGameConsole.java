@@ -61,7 +61,7 @@ public class ServerGameConsole extends javax.swing.JFrame {
 
         jTextField1.setBackground(new java.awt.Color(1, 1, 1));
         jTextField1.setFont(new java.awt.Font("Hack", 1, 13)); // NOI18N
-        jTextField1.setForeground(new java.awt.Color(1, 1, 1));
+        jTextField1.setForeground(new java.awt.Color(254, 254, 254));
         jTextField1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

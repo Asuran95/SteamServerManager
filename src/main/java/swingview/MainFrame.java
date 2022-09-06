@@ -371,7 +371,7 @@ public class MainFrame extends javax.swing.JFrame {
     private ServerGameConsole getServerConsole(ServerGameVO selectedServer){
                 
         for (ServerGameConsole serverGameConsole : serverGameConsoleList){
-            if (serverGameConsole.getServerProperties().getServerGame().equals(selectedServer)){
+            if (serverGameConsole.getServerProperties().getServerGame().getIdServerGame().equals(selectedServer.getIdServerGame())){
                 return serverGameConsole;
             }
         }
