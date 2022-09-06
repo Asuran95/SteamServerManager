@@ -19,19 +19,19 @@ public class ServerRunnerEventManager implements ServerRunnerListener {
 	@Override
     public void onServerStarted(ServerGame serverGame) {
 		steamServerManagerEAO.persistServerGame(serverGame);
-		steamServerManagerListener.onUpdateServerStatus();
+		steamServerManagerListener.onServerGameChanged();
     }
 
     @Override
     public void onServerStopped(ServerGame serverGame) {
     	steamServerManagerEAO.persistServerGame(serverGame);
-    	steamServerManagerListener.onUpdateServerStatus();
+    	steamServerManagerListener.onServerGameChanged();
     }
 
     @Override
     public void onServerException(ServerGame serverGame) {
     	steamServerManagerEAO.persistServerGame(serverGame);
-    	steamServerManagerListener.onUpdateServerStatus();
+    	steamServerManagerListener.onServerGameChanged();
     }   
 
 }

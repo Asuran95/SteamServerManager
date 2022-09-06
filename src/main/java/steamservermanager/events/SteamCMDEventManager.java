@@ -18,7 +18,10 @@ public class SteamCMDEventManager implements SteamCMDListener {
   
 		 steamServerManagerListener.onSteamCMDStdOut(out);
          
-         if(out.contains("verifying") || out.contains("downloading") || out.contains("reconfiguring")){
+         if(out.contains("verifying") 
+        		 || out.contains("downloading") 
+        		 || out.contains("reconfiguring")
+        		 || out.contains("stagging")){
              
              String[] splitOut = out.split(":");
              

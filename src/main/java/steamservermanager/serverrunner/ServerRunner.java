@@ -18,11 +18,11 @@ import com.sun.jna.Platform;
 
 import steamservermanager.listeners.ServerGameConsoleListener;
 import steamservermanager.models.ServerGame;
+import steamservermanager.models.enums.Status;
 import steamservermanager.serverrunner.interfaces.ServerMessageDispatcher;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
 import steamservermanager.serverrunner.listeners.ServerRunnerListener;
 import steamservermanager.utils.ObjectUtils;
-import steamservermanager.utils.Status;
 import steamservermanager.vos.ServerGameVO;
 
 public class ServerRunner extends Thread {

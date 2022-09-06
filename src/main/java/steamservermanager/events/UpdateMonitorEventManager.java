@@ -18,20 +18,20 @@ public class UpdateMonitorEventManager implements UpdateMonitorListener {
 	@Override
     public void onNewUpdate(ServerGame serverGame) {
 		steamServerManagerEAO.persistServerGame(serverGame);
-		steamServerManagerListener.onUpdateServerStatus();
+		steamServerManagerListener.onServerGameChanged();
     }
 
     @Override
     public void onGetUpdateJob(ServerGame serverGame) {
     	steamServerManagerEAO.persistServerGame(serverGame);
-    	steamServerManagerListener.onUpdateServerStatus();
+    	steamServerManagerListener.onServerGameChanged();
     	steamServerManagerListener.onUpdateServer(serverGame);
     }
 
     @Override
     public void onCompletedUpdate(ServerGame serverGame) {
     	steamServerManagerEAO.persistServerGame(serverGame);
-    	steamServerManagerListener.onUpdateServerStatus();
+    	steamServerManagerListener.onServerGameChanged();
         steamServerManagerListener.onCompleteUpdateServer();
     }  
 

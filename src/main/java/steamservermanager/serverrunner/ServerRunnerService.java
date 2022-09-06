@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import steamservermanager.events.EventManager;
 import steamservermanager.models.ServerGame;
+import steamservermanager.models.enums.Status;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
-import steamservermanager.utils.Status;
 
 public class ServerRunnerService {
 	

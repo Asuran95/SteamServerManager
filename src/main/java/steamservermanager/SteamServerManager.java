@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import steamservermanager.eao.SteamServerManagerEAO;
+import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
+import steamservermanager.models.enums.Status;
 import steamservermanager.serverrunner.ServerRunnerService;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
 import steamservermanager.updaterservergame.UpdaterServerGameService;
 import steamservermanager.utils.ObjectUtils;
-import steamservermanager.utils.Status;
+import steamservermanager.utils.SteamAPIUtils;
+import steamservermanager.validators.SteamServerManagerValidator;
 import steamservermanager.vos.ServerGameVO;
 
 public class SteamServerManager {
@@ -18,13 +21,15 @@ public class SteamServerManager {
     private ServerRunnerService serverRunnerService;
     private SteamServerManagerEAO steamServerManagerEAO;
     private SteamServerManagerValidator validator;
+    private SteamServerManagerListener listener;
 
 
-    public SteamServerManager(UpdaterServerGameService updaterServerGameService, ServerRunnerService serverRunnerService, SteamServerManagerEAO steamServerManagerEAO) {
+    public SteamServerManager(UpdaterServerGameService updaterServerGameService, ServerRunnerService serverRunnerService, SteamServerManagerEAO steamServerManagerEAO, SteamServerManagerListener listener) {
         this.updaterServerGameService = updaterServerGameService;
         this.serverRunnerService = serverRunnerService;
         this.steamServerManagerEAO = steamServerManagerEAO;
         this.validator = new SteamServerManagerValidator(steamServerManagerEAO);
+        this.listener = listener;
     }
 
     public void startManager() {
@@ -42,10 +47,14 @@ public class SteamServerManager {
         }
     }
 
-    public void create(int appId, String serverName, String startScript) {
+    public void create(int appId, String localName, String serverName, String startScript) {
+    	
+    	localName = normalizeStringForDirectoryName(localName);
+    	
         ServerGame serverGame = new ServerGame();
         serverGame.setAppID(appId);
-        serverGame.setLocalName(serverName);
+        serverGame.setGameName(SteamAPIUtils.getGameNameBySteamId(appId));
+        serverGame.setLocalName(localName);
         serverGame.setStartScript(startScript);
         
         validator.validadeNewServer(serverGame);
@@ -53,6 +62,14 @@ public class SteamServerManager {
         steamServerManagerEAO.persistServerGame(serverGame);
         
     	updaterServerGameService.update(serverGame);
+    }
+    
+    private String normalizeStringForDirectoryName(String dirName) {
+    	dirName.trim();
+    	dirName = dirName.replaceAll(" ", "_");
+    	dirName = dirName.replaceAll("\\W+", "").trim();
+
+    	return dirName;
     }
     
     public void save(ServerGameVO serverGame) {
@@ -64,6 +81,8 @@ public class SteamServerManager {
     	serverGameLoaded.setStartScript(serverGame.getStartScript());
     	
     	steamServerManagerEAO.mergeServerGame(serverGameLoaded);
+    	
+    	listener.onServerGameChanged();
     }
 
     public void update(ServerGameVO serverGame) {

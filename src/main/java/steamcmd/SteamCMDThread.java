@@ -26,7 +26,7 @@ public class SteamCMDThread extends Thread {
 	@Override
 	public void run() {
 		InputStream stdout = pty.getInputStream();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stdout, StandardCharsets.US_ASCII), 1);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stdout, StandardCharsets.UTF_8), 1);
 
 		try {
 			while (true) {

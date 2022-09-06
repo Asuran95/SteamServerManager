@@ -5,8 +5,8 @@ import java.util.List;
 
 import steamcmd.SteamCMD;
 import steamservermanager.models.ServerGame;
+import steamservermanager.models.enums.Status;
 import steamservermanager.updaterservergame.listeners.UpdateMonitorListener;
-import steamservermanager.utils.Status;
 
 public class UpdaterServerGame {
 

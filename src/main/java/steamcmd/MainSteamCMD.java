@@ -21,6 +21,7 @@ public class MainSteamCMD {
 		steamCMD.loginAnonymous();
 		
 		steamCMD.appUpdate(205);	
+		
 	}
 }
 

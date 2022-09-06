@@ -1,15 +1,18 @@
 
 package swingview;
 
+import steamservermanager.SteamServerManager;
 import steamservermanager.vos.ServerGameVO;
 
 public class EditServerGameFrame extends javax.swing.JFrame {
 
     private ServerGameVO serverGame;
+    private SteamServerManager steamServerManager;
     
-    public EditServerGameFrame(ServerGameVO serverGame) {
+    public EditServerGameFrame(ServerGameVO serverGame, SteamServerManager steamServerManager) {
         initComponents();
         this.serverGame = serverGame;
+        this.steamServerManager = steamServerManager;
         setLocationRelativeTo(null);
         populateFields();
     }
@@ -29,12 +32,19 @@ public class EditServerGameFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jTextFieldGame = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextFieldServerName = new javax.swing.JTextField();
+        jTextFieldLocalName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextFieldStartScript = new javax.swing.JTextField();
+        jTextFieldServerName = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        jTextFieldStartScript = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextAreaDescription = new javax.swing.JTextArea();
+        jButtonCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Edit Server");
         setResizable(false);
 
         jButtonSave.setText("Save");
@@ -59,14 +69,22 @@ public class EditServerGameFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Game");
 
-        jTextFieldServerName.setEnabled(false);
+        jTextFieldLocalName.setEnabled(false);
+        jTextFieldLocalName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldLocalNameActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Local Name");
+
         jTextFieldServerName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldServerNameActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Server Name");
+        jLabel5.setText("Server Name");
 
         jTextFieldStartScript.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -74,7 +92,20 @@ public class EditServerGameFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setText("Start Script");
+        jLabel6.setText("Start Script");
+
+        jLabel7.setText("Description");
+
+        jTextAreaDescription.setColumns(20);
+        jTextAreaDescription.setRows(5);
+        jScrollPane1.setViewportView(jTextAreaDescription);
+
+        jButtonCancel.setText("Cancel");
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -85,24 +116,32 @@ public class EditServerGameFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addGap(382, 393, Short.MAX_VALUE))
+                        .addGap(382, 669, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldServerName)
-                            .addComponent(jTextFieldGame)
-                            .addComponent(jTextFieldStartScript)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel7))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldLocalName, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldGame, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldStartScript, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldServerName, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                         .addComponent(jLabel1)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabelAppID))
-                                    .addComponent(jLabel5))
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
@@ -122,13 +161,23 @@ public class EditServerGameFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldServerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextFieldLocalName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldServerName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldStartScript, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                .addComponent(jButtonSave)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonSave)
+                    .addComponent(jButtonCancel))
                 .addGap(15, 15, 15))
         );
 
@@ -139,46 +188,62 @@ public class EditServerGameFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldGameActionPerformed
 
+    private void jTextFieldLocalNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldLocalNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldLocalNameActionPerformed
+
     private void jTextFieldServerNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldServerNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldServerNameActionPerformed
+
+    private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
+        
+        String serverName = jTextFieldServerName.getText();
+        serverGame.setServerName(serverName);
+        
+        String startScript = jTextFieldStartScript.getText();
+        serverGame.setStartScript(startScript);
+
+        String description = jTextAreaDescription.getText();
+        serverGame.setDescription(description);
+        
+        steamServerManager.save(serverGame);
+        
+        this.dispose();
+    }//GEN-LAST:event_jButtonSaveActionPerformed
 
     private void jTextFieldStartScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldStartScriptActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldStartScriptActionPerformed
 
-    private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        
-        String serverName = jTextFieldServerName.getText();
-        
-        if(!serverGame.getLocalName().equals(serverName)){
-            System.out.println("Atualizar server name");
-        }
-        
-        String startScript = jTextFieldStartScript.getText();
-        
-        serverGame.setStartScript(startScript);
-        
+    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         this.dispose();
-    }//GEN-LAST:event_jButtonSaveActionPerformed
+    }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void populateFields(){
         jLabelAppID.setText(serverGame.getAppID()+"");
-        jTextFieldStartScript.setText(serverGame.getStartScript());
-        jTextFieldServerName.setText(serverGame.getLocalName());
         jTextFieldGame.setText(serverGame.getGameName());
+        jTextFieldLocalName.setText(serverGame.getLocalName());
+        jTextFieldServerName.setText(serverGame.getServerName());
+        jTextFieldStartScript.setText(serverGame.getStartScript());
+        jTextAreaDescription.setText(serverGame.getDescription());
     }
     
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelAppID;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextArea jTextAreaDescription;
     private javax.swing.JTextField jTextFieldGame;
+    private javax.swing.JTextField jTextFieldLocalName;
     private javax.swing.JTextField jTextFieldServerName;
     private javax.swing.JTextField jTextFieldStartScript;
     // End of variables declaration//GEN-END:variables

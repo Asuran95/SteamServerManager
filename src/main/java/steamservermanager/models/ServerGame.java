@@ -6,7 +6,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import steamservermanager.utils.Status;
+import steamservermanager.models.enums.Status;
 
 @Entity
 public class ServerGame {

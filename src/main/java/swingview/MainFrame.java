@@ -23,14 +23,14 @@ import javax.swing.text.DefaultCaret;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
-import com.sun.jna.Platform;
+import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
 
 import steamservermanager.SteamServerManager;
 import steamservermanager.SteamServerManagerBuilder;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
+import steamservermanager.models.enums.Status;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
-import steamservermanager.utils.Status;
 import steamservermanager.vos.ServerGameVO;
 
 
@@ -173,6 +173,7 @@ public class MainFrame extends javax.swing.JFrame {
         jTextAreaSteamCMD = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Steam Server Manager");
 
         jButtonOpenLibrary.setText("Open");
         jButtonOpenLibrary.addActionListener(new java.awt.event.ActionListener() {
@@ -188,14 +189,14 @@ public class MainFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Server Name", "Game", "ID", "Status"
+                "Local Name", "Server Name", "Game", "AppID", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -210,13 +211,13 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTableLibrary);
         if (jTableLibrary.getColumnModel().getColumnCount() > 0) {
             jTableLibrary.getColumnModel().getColumn(0).setResizable(false);
-            jTableLibrary.getColumnModel().getColumn(1).setResizable(false);
-            jTableLibrary.getColumnModel().getColumn(2).setMinWidth(60);
-            jTableLibrary.getColumnModel().getColumn(2).setPreferredWidth(60);
-            jTableLibrary.getColumnModel().getColumn(2).setMaxWidth(60);
-            jTableLibrary.getColumnModel().getColumn(3).setMinWidth(120);
-            jTableLibrary.getColumnModel().getColumn(3).setPreferredWidth(120);
-            jTableLibrary.getColumnModel().getColumn(3).setMaxWidth(120);
+            jTableLibrary.getColumnModel().getColumn(2).setResizable(false);
+            jTableLibrary.getColumnModel().getColumn(3).setMinWidth(80);
+            jTableLibrary.getColumnModel().getColumn(3).setPreferredWidth(80);
+            jTableLibrary.getColumnModel().getColumn(3).setMaxWidth(80);
+            jTableLibrary.getColumnModel().getColumn(4).setMinWidth(120);
+            jTableLibrary.getColumnModel().getColumn(4).setPreferredWidth(120);
+            jTableLibrary.getColumnModel().getColumn(4).setMaxWidth(120);
         }
 
         jButtonNewServer.setText("New");
@@ -236,7 +237,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 992, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButtonOpenLibrary)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -261,7 +262,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonNewServer, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
@@ -270,9 +271,10 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane1.addTab("Server Manager", jPanel1);
 
         jTextAreaSteamCMD.setEditable(false);
-        jTextAreaSteamCMD.setBackground(new java.awt.Color(80, 80, 80));
+        jTextAreaSteamCMD.setBackground(new java.awt.Color(1, 1, 1));
         jTextAreaSteamCMD.setColumns(20);
-        jTextAreaSteamCMD.setForeground(new java.awt.Color(102, 204, 0));
+        jTextAreaSteamCMD.setFont(new java.awt.Font("Hack", 1, 13)); // NOI18N
+        jTextAreaSteamCMD.setForeground(new java.awt.Color(87, 149, 254));
         jTextAreaSteamCMD.setRows(5);
         jScrollPane2.setViewportView(jTextAreaSteamCMD);
 
@@ -282,14 +284,14 @@ public class MainFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 992, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -418,8 +420,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     private void editSelectedServer(){
-        
-        EditServerGameFrame editServerGameFrame = new EditServerGameFrame(getSelectedServer());
+        EditServerGameFrame editServerGameFrame = new EditServerGameFrame(getSelectedServer(), steamServerManager);
         
         editServerGameFrame.setVisible(true);
     }
@@ -444,25 +445,10 @@ public class MainFrame extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
+        	AcrylLookAndFeel.setTheme("Large-Font");
         	
-        	if (Platform.isLinux()) {
-        		for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-        			
-        			System.out.println(info.getClassName());
-        			
-                    if ("Nimbus".equals(info.getName())) {
-                        //javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-                    	UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-                        break;
-                    }
-                }
-        	} else if (Platform.isWindows()) {
-        		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        	}
-        	
-        	//UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
+        	UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
 
-            
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -521,9 +507,7 @@ public class MainFrame extends javax.swing.JFrame {
 	        model.setRowCount(0);
 	        
 	        for (ServerGameVO s : serverGameLibrary){
-	            System.out.println(s.getLocalName());
-	            
-	            String[] linha = { s.getLocalName(), "", s.getAppID()+"", s.getStatus().toString() };
+	            String[] linha = { s.getLocalName(), s.getServerName(), s.getGameName(), s.getAppID()+ "", s.getStatus().toString() };
 	        
 	            model.addRow(linha);
 	        }
@@ -548,12 +532,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
         @Override
-        public void onUpdateServerStatus() {
-            updateJTableLibrary();
-        }
-
-        @Override
-        public void onReady() {
+        public void onServerGameChanged() {
             updateJTableLibrary();
         }
 
@@ -563,7 +542,13 @@ public class MainFrame extends javax.swing.JFrame {
             jProgressBarUpdate.setStringPainted(true);
             
             if(serverGameAtual != null){
-                jProgressBarUpdate.setString(serverGameAtual.getLocalName() + " - " + status + ": " + pctUpdate + "%");
+            	
+            	if (serverGameAtual.getServerName() != null && !serverGameAtual.getServerName().isEmpty()) {
+            		jProgressBarUpdate.setString(serverGameAtual.getServerName() + " - " + status + ": " + pctUpdate + "%");
+            	} else {
+            		jProgressBarUpdate.setString(serverGameAtual.getLocalName() + " - " + status + ": " + pctUpdate + "%");
+            	}
+
             } else {
                 jProgressBarUpdate.setString("");
             }
@@ -583,6 +568,5 @@ public class MainFrame extends javax.swing.JFrame {
             jProgressBarUpdate.setString("");
             jProgressBarUpdate.setValue(0);
         }
-
     } 
 }

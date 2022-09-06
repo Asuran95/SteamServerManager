@@ -40,7 +40,7 @@ public class SteamServerManagerBuilder {
 		UpdaterServerGameService updaterServerGameService = new UpdaterServerGameService(localLibrary, eventManager);
 		ServerRunnerService serverRunnerService = new ServerRunnerService(localLibrary, eventManager);
 
-		return new SteamServerManager(updaterServerGameService, serverRunnerService, steamServerManagerEAO);
+		return new SteamServerManager(updaterServerGameService, serverRunnerService, steamServerManagerEAO, listener);
 	}
 	
 	private SteamServerManagerEAO setupSteamServerManagerEAO(String localLibrary) {

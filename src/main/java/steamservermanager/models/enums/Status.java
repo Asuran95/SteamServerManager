@@ -1,4 +1,4 @@
-package steamservermanager.utils;
+package steamservermanager.models.enums;
 
 public enum Status {
     UPDATING, 

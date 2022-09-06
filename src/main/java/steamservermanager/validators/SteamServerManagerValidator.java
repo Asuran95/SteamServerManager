@@ -1,8 +1,11 @@
-package steamservermanager;
+package steamservermanager.validators;
 
 import steamservermanager.eao.SteamServerManagerEAO;
 import steamservermanager.exceptions.ServerLocalNameDuplicatedException;
+import steamservermanager.exceptions.ServerLocalNameIsEmptyException;
+import steamservermanager.exceptions.SteamIDNotFoundException;
 import steamservermanager.models.ServerGame;
+import steamservermanager.utils.SteamAPIUtils;
 
 public class SteamServerManagerValidator {
 	
@@ -13,7 +16,9 @@ public class SteamServerManagerValidator {
 	}
 
 	public void validadeNewServer(ServerGame serverGame) {
+		
 		validadeLocalServerName(serverGame);	
+		validadeServerAppID(serverGame);
 	}
 	
 	public void validateUpdateServer(ServerGame serverGame) {
@@ -21,12 +26,27 @@ public class SteamServerManagerValidator {
 	}
 	
 	private void validadeLocalServerName(ServerGame serverGame) {
+		String localName = serverGame.getLocalName();
+		
+		if (localName == null || localName.isBlank() || localName.isEmpty()) {
+			throw new ServerLocalNameIsEmptyException();
+		}
+
 		ServerGame serverGameLoaded = 
-				steamServerManagerEAO.findServerGameByLocalName(serverGame.getLocalName());
+				steamServerManagerEAO.findServerGameByLocalName(localName);
     			
 		if (serverGameLoaded != null) {
 			throw new ServerLocalNameDuplicatedException();
 		}
+	}
+	
+	private void validadeServerAppID(ServerGame serverGame) {
+		
+		String gameName = SteamAPIUtils.getGameNameBySteamId(serverGame.getAppID());
+		
+		if (gameName == null) {
+			throw new SteamIDNotFoundException();
+    	}
 	}
 
 }

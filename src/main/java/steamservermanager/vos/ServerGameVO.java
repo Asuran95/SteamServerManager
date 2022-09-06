@@ -1,6 +1,6 @@
 package steamservermanager.vos;
 
-import steamservermanager.utils.Status;
+import steamservermanager.models.enums.Status;
 
 public class ServerGameVO {
 	

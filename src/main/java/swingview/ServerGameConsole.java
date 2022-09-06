@@ -52,12 +52,22 @@ public class ServerGameConsole extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
 
         jTextAreaSteamCMD.setEditable(false);
-        jTextAreaSteamCMD.setBackground(new java.awt.Color(80, 80, 80));
+        jTextAreaSteamCMD.setBackground(new java.awt.Color(1, 1, 1));
         jTextAreaSteamCMD.setColumns(20);
-        jTextAreaSteamCMD.setForeground(new java.awt.Color(102, 204, 0));
+        jTextAreaSteamCMD.setFont(new java.awt.Font("Hack", 1, 13)); // NOI18N
+        jTextAreaSteamCMD.setForeground(new java.awt.Color(87, 149, 254));
         jTextAreaSteamCMD.setRows(5);
         jScrollPane2.setViewportView(jTextAreaSteamCMD);
 
+        jTextField1.setBackground(new java.awt.Color(1, 1, 1));
+        jTextField1.setFont(new java.awt.Font("Hack", 1, 13)); // NOI18N
+        jTextField1.setForeground(new java.awt.Color(1, 1, 1));
+        jTextField1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextField1KeyPressed(evt);
@@ -71,7 +81,7 @@ public class ServerGameConsole extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 965, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1041, Short.MAX_VALUE)
                     .addComponent(jTextField1))
                 .addContainerGap())
         );
@@ -79,7 +89,7 @@ public class ServerGameConsole extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -97,6 +107,10 @@ public class ServerGameConsole extends javax.swing.JFrame {
             jTextField1.setText("");
         }  
     }//GEN-LAST:event_jTextField1KeyPressed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane2;
