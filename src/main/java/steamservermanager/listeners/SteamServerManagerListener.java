@@ -1,16 +1,16 @@
 package steamservermanager.listeners;
 
-import steamservermanager.models.ServerGame;
+import steamservermanager.vos.ServerGameVO;
 
 public interface SteamServerManagerListener {
-   
-	void onServerGameChanged();
-    
+	
     void onSteamCMDStdOut(String out);
     
     void onStatusSteamCMD(String status, double pctUpdate);
     
-    void onStartUpdateServerGame(ServerGame serverGame);
+    void onServerGameChanged(ServerGameVO serverGame);
     
-    void onCompletedUpdateServerGame();  
+    void onStartUpdateServerGame(ServerGameVO serverGame);
+    
+    void onCompletedUpdateServerGame(ServerGameVO serverGame);  
 }

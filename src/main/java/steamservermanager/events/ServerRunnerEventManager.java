@@ -7,7 +7,9 @@ import steamservermanager.eao.ServerGameEAO;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
 import steamservermanager.serverrunner.listeners.ServerRunnerListener;
+import steamservermanager.utils.ObjectUtils;
 import steamservermanager.utils.ServiceProvider;
+import steamservermanager.vos.ServerGameVO;
 
 public class ServerRunnerEventManager implements ServerRunnerListener {
 
@@ -23,8 +25,10 @@ public class ServerRunnerEventManager implements ServerRunnerListener {
     public void onServerStarted(ServerGame serverGame) {
 		serverGameEAO.merge(serverGame);
 		
+		ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+		
 		for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
-			steamServerManagerListener.onServerGameChanged();
+			steamServerManagerListener.onServerGameChanged(serverGameVO);
 		}
     }
 
@@ -32,8 +36,10 @@ public class ServerRunnerEventManager implements ServerRunnerListener {
     public void onServerStopped(ServerGame serverGame) {
     	serverGameEAO.merge(serverGame);
     	
+    	ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+    	
     	for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
-    		steamServerManagerListener.onServerGameChanged();
+    		steamServerManagerListener.onServerGameChanged(serverGameVO);
     	}
     }
 
@@ -41,8 +47,10 @@ public class ServerRunnerEventManager implements ServerRunnerListener {
     public void onServerException(ServerGame serverGame) {
     	serverGameEAO.merge(serverGame);
     	
+    	ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+    	
     	for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
-    		steamServerManagerListener.onServerGameChanged();
+    		steamServerManagerListener.onServerGameChanged(serverGameVO);
     	}
     }   
 

@@ -28,7 +28,6 @@ import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
 import steamservermanager.SteamServerManager;
 import steamservermanager.SteamServerManagerBuilder;
 import steamservermanager.listeners.SteamServerManagerListener;
-import steamservermanager.models.ServerGame;
 import steamservermanager.models.enums.Status;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
 import steamservermanager.vos.ServerGameVO;
@@ -39,7 +38,7 @@ public class MainFrame extends javax.swing.JFrame {
     private SteamServerManager steamServerManager;
     private List<ServerGameConsole> serverGameConsoleList = new ArrayList<>();
     private List<ServerGameVO> serverGameLibrary = new ArrayList<>();
-    private ServerGame serverGameAtual;
+    
     
     /**
      * Creates new form MainFrame
@@ -518,6 +517,7 @@ public class MainFrame extends javax.swing.JFrame {
     class SteamServerManagerListenerImpl implements SteamServerManagerListener{
 
         private CircularFifoQueue<String> mensagemFifo = new CircularFifoQueue<>(500);
+        private ServerGameVO serverGameAtual;
         
         @Override
         public void onSteamCMDStdOut(String out) {
@@ -533,7 +533,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
         @Override
-        public void onServerGameChanged() {
+        public void onServerGameChanged(ServerGameVO serverGame) {
             updateJTableLibrary();
         }
 
@@ -559,12 +559,12 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
         @Override
-        public void onStartUpdateServerGame(ServerGame serverGame) {
+        public void onStartUpdateServerGame(ServerGameVO serverGame) {
             serverGameAtual = serverGame;
         }
 
         @Override
-        public void onCompletedUpdateServerGame() {
+        public void onCompletedUpdateServerGame(ServerGameVO serverGame) {
             serverGameAtual = null;
             jProgressBarUpdate.setString("");
             jProgressBarUpdate.setValue(0);

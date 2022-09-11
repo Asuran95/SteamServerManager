@@ -8,9 +8,11 @@ import steamservermanager.events.EventManagerService;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
+import steamservermanager.utils.ObjectUtils;
 import steamservermanager.utils.ServiceProvider;
 import steamservermanager.utils.StringUtils;
 import steamservermanager.validators.SteamServerManagerValidator;
+import steamservermanager.vos.ServerGameVO;
 
 public class SteamServerManagerService {
 	
@@ -39,8 +41,10 @@ public class SteamServerManagerService {
     public ServerGame update(ServerGame serverGame) {
     	serverGameEAO.merge(serverGame);
     	
+    	ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+    	
     	for(SteamServerManagerListener steamServerManagerListener : eventManager.getSteamServerManagerListeners()) {
-    		steamServerManagerListener.onServerGameChanged();
+    		steamServerManagerListener.onServerGameChanged(serverGameVO);
     	}
 
     	return serverGame;

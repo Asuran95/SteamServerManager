@@ -7,7 +7,9 @@ import steamservermanager.eao.ServerGameEAO;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
 import steamservermanager.updaterservergame.listeners.UpdateMonitorListener;
+import steamservermanager.utils.ObjectUtils;
 import steamservermanager.utils.ServiceProvider;
+import steamservermanager.vos.ServerGameVO;
 
 public class UpdateMonitorEventManager implements UpdateMonitorListener {
 
@@ -23,8 +25,10 @@ public class UpdateMonitorEventManager implements UpdateMonitorListener {
     public void onNewUpdate(ServerGame serverGame) {
 		serverGameEAO.merge(serverGame);
 		
+		ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+		
 		for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
-			steamServerManagerListener.onServerGameChanged();
+			steamServerManagerListener.onServerGameChanged(serverGameVO);
 		}
     }
 
@@ -32,9 +36,11 @@ public class UpdateMonitorEventManager implements UpdateMonitorListener {
     public void onStartUpdate(ServerGame serverGame) {
     	serverGameEAO.merge(serverGame);
     	
+    	ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+    	
     	for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
-	    	steamServerManagerListener.onServerGameChanged();
-	    	steamServerManagerListener.onStartUpdateServerGame(serverGame);
+	    	steamServerManagerListener.onServerGameChanged(serverGameVO);
+	    	steamServerManagerListener.onStartUpdateServerGame(serverGameVO);
     	}
     }
 
@@ -42,9 +48,11 @@ public class UpdateMonitorEventManager implements UpdateMonitorListener {
     public void onCompletedUpdate(ServerGame serverGame) {
     	serverGameEAO.merge(serverGame);
     	
+    	ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+    	
     	for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
-	    	steamServerManagerListener.onServerGameChanged();
-	        steamServerManagerListener.onCompletedUpdateServerGame();
+	    	steamServerManagerListener.onServerGameChanged(serverGameVO);
+	        steamServerManagerListener.onCompletedUpdateServerGame(serverGameVO);
     	}
     }  
 }
