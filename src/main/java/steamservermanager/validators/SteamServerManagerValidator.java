@@ -1,19 +1,16 @@
 package steamservermanager.validators;
 
-import steamservermanager.eao.SteamServerManagerEAO;
+import steamservermanager.eao.ServerGameEAO;
 import steamservermanager.exceptions.ServerLocalNameDuplicatedException;
 import steamservermanager.exceptions.ServerLocalNameIsEmptyException;
 import steamservermanager.exceptions.SteamIDNotFoundException;
 import steamservermanager.models.ServerGame;
+import steamservermanager.utils.ServiceProvider;
 import steamservermanager.utils.SteamAPIUtils;
 
 public class SteamServerManagerValidator {
 	
-	private SteamServerManagerEAO steamServerManagerEAO;
-	
-	public SteamServerManagerValidator(SteamServerManagerEAO steamServerManagerEAO) {
-		this.steamServerManagerEAO = steamServerManagerEAO;
-	}
+	private ServerGameEAO steamServerManagerEAO = ServiceProvider.provide(ServerGameEAO.class);
 
 	public void validadeNewServer(ServerGame serverGame) {
 		

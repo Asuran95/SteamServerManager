@@ -10,7 +10,7 @@ public interface SteamServerManagerListener {
     
     void onStatusSteamCMD(String status, double pctUpdate);
     
-    void onUpdateServer(ServerGame serverGame);
+    void onStartUpdateServerGame(ServerGame serverGame);
     
-    void onCompleteUpdateServer();  
+    void onCompletedUpdateServerGame();  
 }

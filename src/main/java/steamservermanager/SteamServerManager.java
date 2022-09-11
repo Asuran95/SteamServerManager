@@ -3,43 +3,38 @@ package steamservermanager;
 import java.util.ArrayList;
 import java.util.List;
 
-import steamservermanager.eao.SteamServerManagerEAO;
-import steamservermanager.listeners.SteamServerManagerListener;
+import steamservermanager.eao.ManagerEAO;
+import steamservermanager.eao.ServerGameEAO;
+import steamservermanager.models.Manager;
 import steamservermanager.models.ServerGame;
 import steamservermanager.models.enums.Status;
-import steamservermanager.serverrunner.ServerRunnerService;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
-import steamservermanager.updaterservergame.UpdaterServerGameService;
+import steamservermanager.services.SteamServerManagerService;
 import steamservermanager.utils.ObjectUtils;
+import steamservermanager.utils.ServiceProvider;
 import steamservermanager.utils.SteamAPIUtils;
-import steamservermanager.validators.SteamServerManagerValidator;
 import steamservermanager.vos.ServerGameVO;
 
 public class SteamServerManager {
 
-    private UpdaterServerGameService updaterServerGameService;
-    private ServerRunnerService serverRunnerService;
-    private SteamServerManagerEAO steamServerManagerEAO;
-    private SteamServerManagerValidator validator;
-    private SteamServerManagerListener listener;
-
-
-    public SteamServerManager(UpdaterServerGameService updaterServerGameService, ServerRunnerService serverRunnerService, SteamServerManagerEAO steamServerManagerEAO, SteamServerManagerListener listener) {
-        this.updaterServerGameService = updaterServerGameService;
-        this.serverRunnerService = serverRunnerService;
-        this.steamServerManagerEAO = steamServerManagerEAO;
-        this.validator = new SteamServerManagerValidator(steamServerManagerEAO);
-        this.listener = listener;
-    }
+    private SteamServerManagerService steamServerManagerService = ServiceProvider.provide(SteamServerManagerService.class);
+    private ServerGameEAO serverGameEAO = ServiceProvider.provide(ServerGameEAO.class);
 
     public void startManager() {
 
-    	List<ServerGame> serverGameLibrary = steamServerManagerEAO.findAllServerGame();
+    	List<ServerGame> serverGameLibrary = steamServerManagerService.getServerList();
     	
         for (ServerGame serverGame : serverGameLibrary) {
+        	
+        	if (serverGame.getManager() == null) {
+            	ManagerEAO managerEAO = ServiceProvider.provide(ManagerEAO.class);
+        		Manager manager = managerEAO.find(1L);
+        		
+        		serverGame.setManager(manager);
+            }
 
             if (serverGame.getStatus().equals(Status.WAITING) || serverGame.getStatus().equals(Status.UPDATING)) {
-            	updaterServerGameService.update(serverGame);
+            	steamServerManagerService.startUpdateServerGame(serverGame);
 
             } else {
                 serverGame.setStatus(Status.STOPPED);
@@ -48,60 +43,43 @@ public class SteamServerManager {
     }
 
     public void create(int appId, String localName, String serverName, String startScript) {
-    	
-    	localName = normalizeStringForDirectoryName(localName);
-    	
         ServerGame serverGame = new ServerGame();
         serverGame.setAppID(appId);
         serverGame.setGameName(SteamAPIUtils.getGameNameBySteamId(appId));
         serverGame.setLocalName(localName);
+        serverGame.setServerName(serverName);
         serverGame.setStartScript(startScript);
         
-        validator.validadeNewServer(serverGame);
-        
-        steamServerManagerEAO.persistServerGame(serverGame);
-        
-    	updaterServerGameService.update(serverGame);
+        steamServerManagerService.create(serverGame);
     }
     
-    private String normalizeStringForDirectoryName(String dirName) {
-    	dirName.trim();
-    	dirName = dirName.replaceAll(" ", "_");
-    	dirName = dirName.replaceAll("\\W+", "").trim();
-
-    	return dirName;
-    }
-    
-    public void save(ServerGameVO serverGame) {
+    public void update(ServerGameVO serverGame) {
     	ServerGame serverGameLoaded = 
-    			steamServerManagerEAO.findServerGameById(serverGame.getIdServerGame());
+    			serverGameEAO.findServerGameById(serverGame.getIdServerGame());
     	
     	serverGameLoaded.setServerName(serverGame.getServerName());
     	serverGameLoaded.setDescription(serverGame.getDescription());
     	serverGameLoaded.setStartScript(serverGame.getStartScript());
     	
-    	steamServerManagerEAO.mergeServerGame(serverGameLoaded);
-    	
-    	listener.onServerGameChanged();
+    	steamServerManagerService.update(serverGameLoaded);
     }
 
-    public void update(ServerGameVO serverGame) {
+    public void startUpdateServerGame(ServerGameVO serverGame) {
     	ServerGame serverGameLoaded = 
-    			steamServerManagerEAO.findServerGameById(serverGame.getIdServerGame());
+    			serverGameEAO.findServerGameById(serverGame.getIdServerGame());
     	
-    	serverRunnerService.stopServer(serverGameLoaded);
-    	updaterServerGameService.update(serverGameLoaded);
+    	steamServerManagerService.startUpdateServerGame(serverGameLoaded);
     }
 
-    public ServerProperties start(ServerGameVO serverGame) {
-    	ServerGame serverGameLoaded = steamServerManagerEAO.findServerGameById(serverGame.getIdServerGame());
+    public ServerProperties startServerGame(ServerGameVO serverGame) {
+    	ServerGame serverGameLoaded = serverGameEAO.findServerGameById(serverGame.getIdServerGame());
     	
-        return serverRunnerService.startServer(serverGameLoaded);
+        return steamServerManagerService.startServerGame(serverGameLoaded);
     }
     
     public List<ServerGameVO> getServerList() {
 
-    	List<ServerGame> serverList = steamServerManagerEAO.findAllServerGame();
+    	List<ServerGame> serverList = steamServerManagerService.getServerList();
     	
     	List<ServerGameVO> copyList = new ArrayList<>();
     	

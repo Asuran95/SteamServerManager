@@ -8,12 +8,10 @@ import steamservermanager.models.ServerGame;
 public class UpdateWorker extends Thread {
 
     private UpdaterServerGame monitor;
-    private String localLibrary;
     private SteamCMD steamCmd;
 
-    public UpdateWorker(UpdaterServerGame monitor, String localLibrary, SteamCMD steamCmd) {
+    public UpdateWorker(UpdaterServerGame monitor, SteamCMD steamCmd) {
         this.monitor = monitor;
-        this.localLibrary = localLibrary;
         this.steamCmd = steamCmd;
     }
 
@@ -23,6 +21,8 @@ public class UpdateWorker extends Thread {
             ServerGame updateJob = waitForUpdate();
             
             steamCmd.start();
+            
+            String localLibrary = updateJob.getManager().getLocalLibrary();
 
             File localDir = new File(localLibrary + File.separator + updateJob.getLocalName());
 

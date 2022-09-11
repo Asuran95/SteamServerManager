@@ -1,38 +1,50 @@
 package steamservermanager.events;
 
-import steamservermanager.eao.SteamServerManagerEAO;
+import java.util.ArrayList;
+import java.util.List;
+
+import steamservermanager.eao.ServerGameEAO;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
 import steamservermanager.updaterservergame.listeners.UpdateMonitorListener;
+import steamservermanager.utils.ServiceProvider;
 
 public class UpdateMonitorEventManager implements UpdateMonitorListener {
 
-	private SteamServerManagerEAO steamServerManagerEAO;
-	private SteamServerManagerListener steamServerManagerListener;
+	private ServerGameEAO serverGameEAO = ServiceProvider.provide(ServerGameEAO.class);
 	
-	public UpdateMonitorEventManager(SteamServerManagerEAO steamServerManagerEAO, SteamServerManagerListener steamServerManagerListener) {
-		this.steamServerManagerEAO = steamServerManagerEAO;
-		this.steamServerManagerListener = steamServerManagerListener;
+	private List<SteamServerManagerListener> steamServerManagerListeners = new ArrayList<>();
+	
+	public void addListener(SteamServerManagerListener steamServerManagerListener) {
+		steamServerManagerListeners.add(steamServerManagerListener);
 	}
 
 	@Override
     public void onNewUpdate(ServerGame serverGame) {
-		steamServerManagerEAO.persistServerGame(serverGame);
-		steamServerManagerListener.onServerGameChanged();
+		serverGameEAO.merge(serverGame);
+		
+		for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
+			steamServerManagerListener.onServerGameChanged();
+		}
     }
 
     @Override
-    public void onGetUpdateJob(ServerGame serverGame) {
-    	steamServerManagerEAO.persistServerGame(serverGame);
-    	steamServerManagerListener.onServerGameChanged();
-    	steamServerManagerListener.onUpdateServer(serverGame);
+    public void onStartUpdate(ServerGame serverGame) {
+    	serverGameEAO.merge(serverGame);
+    	
+    	for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
+	    	steamServerManagerListener.onServerGameChanged();
+	    	steamServerManagerListener.onStartUpdateServerGame(serverGame);
+    	}
     }
 
     @Override
     public void onCompletedUpdate(ServerGame serverGame) {
-    	steamServerManagerEAO.persistServerGame(serverGame);
-    	steamServerManagerListener.onServerGameChanged();
-        steamServerManagerListener.onCompleteUpdateServer();
+    	serverGameEAO.merge(serverGame);
+    	
+    	for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
+	    	steamServerManagerListener.onServerGameChanged();
+	        steamServerManagerListener.onCompletedUpdateServerGame();
+    	}
     }  
-
 }

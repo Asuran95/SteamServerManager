@@ -7,7 +7,7 @@ public interface UpdateMonitorListener {
     
 	void onNewUpdate(ServerGame serverGame);
     
-    void onGetUpdateJob(ServerGame serverGame);
+    void onStartUpdate(ServerGame serverGame);
     
     void onCompletedUpdate(ServerGame serverGame);
 }

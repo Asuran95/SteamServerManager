@@ -1,25 +1,20 @@
-package steamservermanager.serverrunner;
+package steamservermanager.services;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import steamservermanager.events.EventManager;
+import steamservermanager.events.EventManagerService;
 import steamservermanager.models.ServerGame;
 import steamservermanager.models.enums.Status;
+import steamservermanager.serverrunner.ServerRunner;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
+import steamservermanager.utils.ServiceProvider;
 
 public class ServerRunnerService {
 	
 	private List<ServerRunner> serversRunning = new ArrayList<>();
-	private String localLibrary;
-	private EventManager eventManager;
-	
-	
-	public ServerRunnerService(String localLibrary, EventManager eventManager) {
-		this.localLibrary = localLibrary;
-		this.eventManager = eventManager;
-	}
+	private EventManagerService eventManager = ServiceProvider.provide(EventManagerService.class);
 
 	public ServerProperties startServer(ServerGame serverGame) {
 		ServerProperties serverProperties = null;
@@ -36,7 +31,7 @@ public class ServerRunnerService {
     		} else {
     			serversRunning.remove(serverRunner);
     			
-    			serverRunner = new ServerRunner(serverGame, localLibrary, eventManager.getServerRunnerListener());
+    			serverRunner = new ServerRunner(serverGame, eventManager.getServerRunnerListener());
     			
     			serversRunning.add(serverRunner);
     			
@@ -46,7 +41,7 @@ public class ServerRunnerService {
     		}
     		
     	} else {
-    		ServerRunner serverRunner = new ServerRunner(serverGame, localLibrary, eventManager.getServerRunnerListener());
+    		ServerRunner serverRunner = new ServerRunner(serverGame, eventManager.getServerRunnerListener());
     		
     		serversRunning.add(serverRunner);
 			

@@ -1,5 +1,7 @@
 package steamservermanager.events;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import steamcmd.SteamCMDListener;
@@ -7,16 +9,18 @@ import steamservermanager.listeners.SteamServerManagerListener;
 
 public class SteamCMDEventManager implements SteamCMDListener {
 
-	private SteamServerManagerListener steamServerManagerListener;
+	private List<SteamServerManagerListener> steamServerManagerListeners = new ArrayList<>();
 	
-	public SteamCMDEventManager(SteamServerManagerListener steamServerManagerListener) {
-		this.steamServerManagerListener = steamServerManagerListener;
+	public void addListener(SteamServerManagerListener steamServerManagerListener) {
+		steamServerManagerListeners.add(steamServerManagerListener);
 	}
 
 	 @Override
      public void onStdOut(String out) {
-  
-		 steamServerManagerListener.onSteamCMDStdOut(out);
+		 
+		 for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
+			 steamServerManagerListener.onSteamCMDStdOut(out);
+		 }
          
          if(out.contains("verifying") 
         		 || out.contains("downloading") 
@@ -31,7 +35,9 @@ public class SteamCMDEventManager implements SteamCMDListener {
              
              double pct = Double.parseDouble(pctStringSplit[1]);
              
-             steamServerManagerListener.onStatusSteamCMD(statusStringSplit[4].replace(",", ""), pct);
+             for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
+            	 steamServerManagerListener.onStatusSteamCMD(statusStringSplit[4].replace(",", ""), pct);
+             }
          }
      }
 

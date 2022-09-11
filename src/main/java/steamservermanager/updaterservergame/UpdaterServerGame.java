@@ -13,17 +13,15 @@ public class UpdaterServerGame {
     private List<ServerGame> updateList = new ArrayList<>();
     private UpdateMonitorListener listener;
     private SteamCMD steamCmd;
-    private String localLibrary;
     private UpdateWorker updateThread;
 
-    public UpdaterServerGame(UpdateMonitorListener listener, SteamCMD steamCmd, String localLibrary) {
+    public UpdaterServerGame(UpdateMonitorListener listener, SteamCMD steamCmd) {
         this.listener = listener;
         this.steamCmd = steamCmd;
-        this.localLibrary = localLibrary;
     }
     
     public void startUpdater() {
-    	updateThread = new UpdateWorker(this, localLibrary, steamCmd);
+    	updateThread = new UpdateWorker(this, steamCmd);
         updateThread.start();
     }
     
@@ -56,7 +54,7 @@ public class UpdaterServerGame {
         
         ServerGame serverGame = updateList.get(0); 
         serverGame.setStatus(Status.UPDATING);    
-        listener.onGetUpdateJob(serverGame);
+        listener.onStartUpdate(serverGame);
             
         return serverGame;
     }

@@ -5,6 +5,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import steamservermanager.models.enums.Status;
 
@@ -29,6 +30,9 @@ public class ServerGame {
     
     @Enumerated(EnumType.STRING)
     private Status status;
+    
+    @ManyToOne
+    private Manager manager;
 
 	public Long getIdServerGame() {
 		return idServerGame;
@@ -92,5 +96,13 @@ public class ServerGame {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Manager getManager() {
+		return manager;
+	}
+
+	public void setManager(Manager manager) {
+		this.manager = manager;
 	}
 }

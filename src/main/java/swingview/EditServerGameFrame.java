@@ -207,7 +207,7 @@ public class EditServerGameFrame extends javax.swing.JFrame {
         String description = jTextAreaDescription.getText();
         serverGame.setDescription(description);
         
-        steamServerManager.save(serverGame);
+        steamServerManager.update(serverGame);
         
         this.dispose();
     }//GEN-LAST:event_jButtonSaveActionPerformed

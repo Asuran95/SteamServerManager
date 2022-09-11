@@ -1,24 +1,16 @@
 package steamservermanager;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
-import steamservermanager.eao.SteamServerManagerEAO;
-import steamservermanager.events.EventManager;
+import steamservermanager.eao.EntityManagerSingleton;
+import steamservermanager.eao.ManagerEAO;
+import steamservermanager.events.EventManagerService;
 import steamservermanager.listeners.SteamServerManagerListener;
-import steamservermanager.serverrunner.ServerRunnerService;
-import steamservermanager.updaterservergame.UpdaterServerGameService;
+import steamservermanager.models.Manager;
+import steamservermanager.utils.ServiceProvider;
 
 public class SteamServerManagerBuilder {
 	
 	private String localLibrary;
 	private SteamServerManagerListener listener;
-	
 	
 	public SteamServerManagerBuilder setLocalLibrary(String localLibrary) {
 		this.localLibrary = localLibrary;
@@ -33,23 +25,35 @@ public class SteamServerManagerBuilder {
 	}
 	
 	public SteamServerManager build() {
-		SteamServerManagerEAO steamServerManagerEAO = setupSteamServerManagerEAO(localLibrary);
-
-		EventManager eventManager = new EventManager(steamServerManagerEAO, listener);
+		setupEntityManager(localLibrary);
 		
-		UpdaterServerGameService updaterServerGameService = new UpdaterServerGameService(localLibrary, eventManager);
-		ServerRunnerService serverRunnerService = new ServerRunnerService(localLibrary, eventManager);
-
-		return new SteamServerManager(updaterServerGameService, serverRunnerService, steamServerManagerEAO, listener);
+		createOrUpdateManager(localLibrary);
+		
+		EventManagerService eventManager = ServiceProvider.provide(EventManagerService.class);
+		eventManager.addListener(listener);
+		
+		return new SteamServerManager();
 	}
 	
-	private SteamServerManagerEAO setupSteamServerManagerEAO(String localLibrary) {
-		Map<String, String> properties = new HashMap<>();
-		properties.put("hibernate.connection.url", "jdbc:sqlite:" + localLibrary + File.separator + "SteamServerManager.db");
+	private void setupEntityManager(String localLibrary) {
+		EntityManagerSingleton.init(localLibrary);
+	}
+	
+	private void createOrUpdateManager(String localLibrary) {
+		ManagerEAO managerEAO = ServiceProvider.provide(ManagerEAO.class);
 		
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("SteamServerManager", properties);
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		Manager manager = managerEAO.find(1L);
 		
-		return new SteamServerManagerEAO(entityManager);
+		if (manager == null) {
+			manager = new Manager();
+			manager.setIdManager(1L);
+			manager.setLocalLibrary(localLibrary);
+			
+			managerEAO.persist(manager);
+		} else {
+			manager.setLocalLibrary(localLibrary);
+			
+			managerEAO.merge(manager);
+		}
 	}
 }

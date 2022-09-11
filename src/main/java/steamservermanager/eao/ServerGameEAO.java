@@ -2,29 +2,16 @@ package steamservermanager.eao;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import steamservermanager.models.ServerGame;
 
-public class SteamServerManagerEAO extends AbstractEAO {
+public class ServerGameEAO extends AbstractEAO<ServerGame> {
 	
-	public SteamServerManagerEAO(EntityManager entityManager) {
-		super(entityManager);
+	public ServerGameEAO() {
+		super(ServerGame.class);
 	}
 
-	public synchronized ServerGame persistServerGame(ServerGame serverGame) {
-		persist(serverGame);
-
-		return serverGame;
-	}
-	
-	public synchronized ServerGame mergeServerGame(ServerGame serverGame) {
-		merge(serverGame);
-		
-		return serverGame;
-	}
-	
 	public synchronized List<ServerGame> findAllServerGame(){
 		StringBuilder sb = new StringBuilder();
 		sb.append(" select sg from ServerGame sg ");
@@ -35,7 +22,7 @@ public class SteamServerManagerEAO extends AbstractEAO {
 	}
 	
 	public ServerGame findServerGameById(Long idServerGame) {
-		return find(ServerGame.class, idServerGame);
+		return find(idServerGame);
 	}
 	
 	public ServerGame findServerGameByLocalName(String localName) {

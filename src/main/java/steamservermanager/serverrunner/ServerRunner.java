@@ -27,17 +27,15 @@ import steamservermanager.vos.ServerGameVO;
 
 public class ServerRunner extends Thread {
 
-    private final ServerGame serverGame;
-    private final String localDir;
-    private final ServerRunnerListener listener;
+    private ServerGame serverGame;
+    private ServerRunnerListener listener;
 
     private Process process;
     private ServerGameConsoleListener listenerStdOut;
     private boolean running = false;
 
-    public ServerRunner(ServerGame serverGame, String localDir, ServerRunnerListener listener) {
+    public ServerRunner(ServerGame serverGame, ServerRunnerListener listener) {
         this.serverGame = serverGame;
-        this.localDir = localDir;
         this.listener = listener;
     }
 
@@ -49,8 +47,10 @@ public class ServerRunner extends Thread {
         List<String> commandBuffer = new ArrayList<>();
 
         String[] scriptSplit = serverGame.getStartScript().split(" ");
+        
+        String localLibrary = serverGame.getManager().getLocalLibrary();
 
-        String pathServer = localDir + File.separator + serverGame.getLocalName() + File.separator + scriptSplit[0];
+        String pathServer = localLibrary + File.separator + serverGame.getLocalName() + File.separator + scriptSplit[0];
 
         commandBuffer.add(pathServer);
 

@@ -6,35 +6,37 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
-public abstract class AbstractEAO {
+public abstract class AbstractEAO<T> {
 	
-	private EntityManager entityManager;
-
-	public AbstractEAO(EntityManager entityManager) {
-		this.entityManager = entityManager;
+	private EntityManager entityManager = EntityManagerSingleton.getEntityManager();
+	
+	private Class<T> entityClass;
+	
+	public AbstractEAO(Class<T> entityClass) {
+		this.entityClass = entityClass;
 	}
 	
-	protected <T> void persist(T entity) {
+	public synchronized void persist(T entity) {
 		entityManager.getTransaction().begin();
 		entityManager.persist(entity);
 		entityManager.getTransaction().commit();
 	}
 	
-	protected <T> void merge(T entity) {
+	public synchronized void merge(T entity) {
 		entityManager.getTransaction().begin();
 		entityManager.merge(entity);
 		entityManager.getTransaction().commit();
 	}
 	
-	protected <T> T find(Class<T> entityClass, Object primaryKey) {
+	public T find(Object primaryKey) {
 		return entityManager.find(entityClass, primaryKey);
 	}
 	
-	protected <T> TypedQuery<T> createQuery(StringBuilder sb, Class<T> resultClass){
+	protected TypedQuery<T> createQuery(StringBuilder sb, Class<T> resultClass){
 		return entityManager.createQuery(sb.toString(), resultClass);
 	}
 	
-	protected <T> T getSingleResult(TypedQuery<T> query) {
+	protected T getSingleResult(TypedQuery<T> query) {
 		try {
 			return (T) query.getSingleResult();
 		} catch(NoResultException ex){
@@ -42,7 +44,7 @@ public abstract class AbstractEAO {
 		}
 	}
 	
-	protected <T> List<T> getResultList(TypedQuery<T> query) {
+	protected List<T> getResultList(TypedQuery<T> query) {
 		return query.getResultList();
 	}
 

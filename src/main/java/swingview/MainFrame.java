@@ -333,6 +333,7 @@ public class MainFrame extends javax.swing.JFrame {
             jLabelLocalLibrary.setText(chooser.getSelectedFile().toString());
             
             jButtonNewServer.setEnabled(true);
+            jButtonOpenLibrary.setEnabled(false);
             
             updateJTableLibrary();
         }
@@ -353,7 +354,7 @@ public class MainFrame extends javax.swing.JFrame {
             ServerGameConsole serverGameConsoleFound = getServerConsole(serverGameSelected);
                 
             if (serverGameConsoleFound == null){
-                ServerProperties serverProperties = steamServerManager.start(serverGameSelected);
+                ServerProperties serverProperties = steamServerManager.startServerGame(serverGameSelected);
             
                 ServerGameConsole serverGameConsole = new ServerGameConsole(serverProperties);
 
@@ -361,7 +362,7 @@ public class MainFrame extends javax.swing.JFrame {
                 
             } else {
                 if(!serverGameConsoleFound.getServerProperties().isRunning()){
-                    ServerProperties serverProperties = steamServerManager.start(serverGameSelected);
+                    ServerProperties serverProperties = steamServerManager.startServerGame(serverGameSelected);
                     serverGameConsoleFound.setServerProperties(serverProperties);
                 }
             }
@@ -382,7 +383,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void updateSelectedServer() {
     	ServerGameVO selectedServer = getSelectedServer();
         
-        steamServerManager.update(selectedServer);
+        steamServerManager.startUpdateServerGame(selectedServer);
         
         ServerGameConsole serverConsole = getServerConsole(selectedServer);
         
@@ -558,12 +559,12 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
         @Override
-        public void onUpdateServer(ServerGame serverGame) {
+        public void onStartUpdateServerGame(ServerGame serverGame) {
             serverGameAtual = serverGame;
         }
 
         @Override
-        public void onCompleteUpdateServer() {
+        public void onCompletedUpdateServerGame() {
             serverGameAtual = null;
             jProgressBarUpdate.setString("");
             jProgressBarUpdate.setValue(0);

@@ -1,20 +1,19 @@
-package steamservermanager.updaterservergame;
+package steamservermanager.services;
 
 import steamcmd.SteamCMD;
 import steamcmd.SteamCMDBuilder;
-import steamservermanager.events.EventManager;
+import steamservermanager.events.EventManagerService;
 import steamservermanager.models.ServerGame;
+import steamservermanager.updaterservergame.UpdaterServerGame;
+import steamservermanager.utils.ServiceProvider;
 
 public class UpdaterServerGameService {
 
 	private UpdaterServerGame updater;
 	
-	private EventManager eventManager;
-	private String localLibrary;
+	private EventManagerService eventManager = ServiceProvider.provide(EventManagerService.class);
 	
-	public UpdaterServerGameService(String localLibrary, EventManager eventManager) {
-		this.localLibrary = localLibrary;
-		this.eventManager = eventManager;
+	public UpdaterServerGameService() {
 		
 		setupUpdater();
 	}
@@ -34,7 +33,7 @@ public class UpdaterServerGameService {
 		
 		SteamCMD steamCmd = builder.build();
 		
-		updater = new UpdaterServerGame(eventManager.getUpdateMonitorListener(), steamCmd, localLibrary);
+		updater = new UpdaterServerGame(eventManager.getUpdateMonitorListener(), steamCmd);
 		
 		updater.startUpdater();
 	}
