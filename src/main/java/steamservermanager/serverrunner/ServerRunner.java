@@ -16,14 +16,14 @@ import java.util.logging.Logger;
 import com.pty4j.PtyProcessBuilder;
 import com.sun.jna.Platform;
 
+import steamservermanager.dtos.ServerGameDTO;
 import steamservermanager.listeners.ServerGameConsoleListener;
 import steamservermanager.models.ServerGame;
-import steamservermanager.models.enums.Status;
+import steamservermanager.models.enums.ServerStatus;
 import steamservermanager.serverrunner.interfaces.ServerMessageDispatcher;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
 import steamservermanager.serverrunner.listeners.ServerRunnerListener;
 import steamservermanager.utils.ObjectUtils;
-import steamservermanager.vos.ServerGameVO;
 
 public class ServerRunner extends Thread {
 
@@ -48,7 +48,7 @@ public class ServerRunner extends Thread {
 
         String[] scriptSplit = serverGame.getStartScript().split(" ");
         
-        String localLibrary = serverGame.getManager().getLocalLibrary();
+        String localLibrary = serverGame.getManagerSettings().getLocalLibrary();
 
         String pathServer = localLibrary + File.separator + serverGame.getLocalName() + File.separator + scriptSplit[0];
 
@@ -76,7 +76,7 @@ public class ServerRunner extends Thread {
             InputStream stdout = process.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(stdout), 1);
             
-            serverGame.setStatus(Status.RUNNING);
+            serverGame.setStatus(ServerStatus.RUNNING);
             listener.onServerStarted(serverGame);
             
             while (true) {
@@ -95,18 +95,18 @@ public class ServerRunner extends Thread {
 
         } catch (IOException e) {
             running = false;
-            serverGame.setStatus(Status.STOPPED);
+            serverGame.setStatus(ServerStatus.STOPPED);
             listener.onServerException(serverGame);
         }
         
-        serverGame.setStatus(Status.STOPPED);
+        serverGame.setStatus(ServerStatus.STOPPED);
         listener.onServerStopped(serverGame);
     }
     
     public void forceStop(){
         process.destroyForcibly();
 
-        serverGame.setStatus(Status.STOPPED);
+        serverGame.setStatus(ServerStatus.STOPPED);
         listener.onServerStopped(serverGame);
     }
 
@@ -124,8 +124,8 @@ public class ServerRunner extends Thread {
             }
 
             @Override
-            public ServerGameVO getServerGame() {
-                return ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+            public ServerGameDTO getServerGame() {
+                return ObjectUtils.copyObject(serverGame, ServerGameDTO.class);
             }
 
             @Override

@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import steamservermanager.events.EventManagerService;
 import steamservermanager.models.ServerGame;
-import steamservermanager.models.enums.Status;
+import steamservermanager.models.enums.ServerStatus;
 import steamservermanager.serverrunner.ServerRunner;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
 import steamservermanager.utils.ServiceProvider;
@@ -25,7 +25,7 @@ public class ServerRunnerService {
     		
     		ServerRunner serverRunner = serverRunnerOptional.get();
     		
-    		if (serverRunner.isRunning() && serverGame.getStatus().equals(Status.RUNNING)) {
+    		if (serverRunner.isRunning() && serverGame.getStatus().equals(ServerStatus.RUNNING)) {
     			serverProperties = serverRunner.getServerProperties();
     			
     		} else {

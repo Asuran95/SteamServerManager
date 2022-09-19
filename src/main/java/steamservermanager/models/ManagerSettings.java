@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class Manager {
+public class ManagerSettings {
 	
 	@Id
     private Long idManager;

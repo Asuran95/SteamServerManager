@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import steamservermanager.models.enums.Status;
+import steamservermanager.models.enums.ServerStatus;
 
 @Entity
 public class ServerGame {
@@ -29,10 +29,10 @@ public class ServerGame {
     private String gameName;
     
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private ServerStatus status;
     
     @ManyToOne
-    private Manager manager;
+    private ManagerSettings managerSettings;
 
 	public Long getIdServerGame() {
 		return idServerGame;
@@ -90,19 +90,23 @@ public class ServerGame {
 		this.gameName = gameName;
 	}
 
-	public Status getStatus() {
+	public ServerStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public void setStatus(ServerStatus status) {
 		this.status = status;
 	}
 
-	public Manager getManager() {
-		return manager;
+	public ManagerSettings getManagerSettings() {
+		return managerSettings;
 	}
 
-	public void setManager(Manager manager) {
-		this.manager = manager;
+	public void setManagerSettings(ManagerSettings managerSettings) {
+		this.managerSettings = managerSettings;
+	}
+	
+	public String getName() {
+		return serverName != null && !serverName.equals("") ? serverName : localName;
 	}
 }

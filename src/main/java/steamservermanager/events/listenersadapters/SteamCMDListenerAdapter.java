@@ -1,21 +1,20 @@
-package steamservermanager.events;
+package steamservermanager.events.listenersadapters;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import steamcmd.SteamCMDListener;
 import steamservermanager.listeners.SteamServerManagerListener;
 
-public class SteamCMDEventManager implements SteamCMDListener {
+public class SteamCMDListenerAdapter implements SteamCMDListener {
 
-	private List<SteamServerManagerListener> steamServerManagerListeners = new ArrayList<>();
+	private List<SteamServerManagerListener> steamServerManagerListeners;
 	
-	public void addListener(SteamServerManagerListener steamServerManagerListener) {
-		steamServerManagerListeners.add(steamServerManagerListener);
+	 public SteamCMDListenerAdapter(List<SteamServerManagerListener> steamServerManagerListeners) {
+		this.steamServerManagerListeners = steamServerManagerListeners;
 	}
 
-	 @Override
+	@Override
      public void onStdOut(String out) {
 		 
 		 for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {

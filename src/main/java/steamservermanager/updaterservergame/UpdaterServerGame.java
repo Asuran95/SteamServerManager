@@ -5,7 +5,7 @@ import java.util.List;
 
 import steamcmd.SteamCMD;
 import steamservermanager.models.ServerGame;
-import steamservermanager.models.enums.Status;
+import steamservermanager.models.enums.ServerStatus;
 import steamservermanager.updaterservergame.listeners.UpdateMonitorListener;
 
 public class UpdaterServerGame {
@@ -25,17 +25,19 @@ public class UpdaterServerGame {
         updateThread.start();
     }
     
-    public void addUpdate(ServerGame serverGame) {
+    public synchronized void addUpdate(ServerGame serverGame) {
 
-        serverGame.setStatus(Status.WAITING);
+    	if (!updateList.contains(serverGame)) {
+    		serverGame.setStatus(ServerStatus.WAITING);
 
-        updateList.add(serverGame);
-        
-        listener.onNewUpdate(serverGame);
-        
-        synchronized (this) {
-            notify();
-        }
+            updateList.add(serverGame);
+            
+            listener.onNewUpdate(serverGame);
+            
+            synchronized (this) {
+                notify();
+            }
+    	}
     }
 
     public ServerGame getUpdateJob() {
@@ -53,7 +55,7 @@ public class UpdaterServerGame {
         }
         
         ServerGame serverGame = updateList.get(0); 
-        serverGame.setStatus(Status.UPDATING);    
+        serverGame.setStatus(ServerStatus.UPDATING);    
         listener.onStartUpdate(serverGame);
             
         return serverGame;
@@ -61,7 +63,7 @@ public class UpdaterServerGame {
 
     public void completedUpdateJob(ServerGame serverGame) {
 
-        serverGame.setStatus(Status.STOPPED);
+        serverGame.setStatus(ServerStatus.STOPPED);
 
         listener.onCompletedUpdate(serverGame);
             

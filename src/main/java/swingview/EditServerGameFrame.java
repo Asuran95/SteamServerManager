@@ -2,14 +2,14 @@
 package swingview;
 
 import steamservermanager.SteamServerManager;
-import steamservermanager.vos.ServerGameVO;
+import steamservermanager.dtos.ServerGameDTO;
 
 public class EditServerGameFrame extends javax.swing.JFrame {
 
-    private ServerGameVO serverGame;
+    private ServerGameDTO serverGame;
     private SteamServerManager steamServerManager;
     
-    public EditServerGameFrame(ServerGameVO serverGame, SteamServerManager steamServerManager) {
+    public EditServerGameFrame(ServerGameDTO serverGame, SteamServerManager steamServerManager) {
         initComponents();
         this.serverGame = serverGame;
         this.steamServerManager = steamServerManager;

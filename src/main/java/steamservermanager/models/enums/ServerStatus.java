@@ -1,6 +1,6 @@
 package steamservermanager.models.enums;
 
-public enum Status {
+public enum ServerStatus {
     UPDATING, 
     RUNNING, 
     STOPPED, 

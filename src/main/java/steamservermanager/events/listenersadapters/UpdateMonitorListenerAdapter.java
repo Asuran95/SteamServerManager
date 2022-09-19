@@ -1,31 +1,30 @@
-package steamservermanager.events;
+package steamservermanager.events.listenersadapters;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import steamservermanager.dtos.ServerGameDTO;
 import steamservermanager.eao.ServerGameEAO;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
 import steamservermanager.updaterservergame.listeners.UpdateMonitorListener;
 import steamservermanager.utils.ObjectUtils;
 import steamservermanager.utils.ServiceProvider;
-import steamservermanager.vos.ServerGameVO;
 
-public class UpdateMonitorEventManager implements UpdateMonitorListener {
+public class UpdateMonitorListenerAdapter implements UpdateMonitorListener {
 
 	private ServerGameEAO serverGameEAO = ServiceProvider.provide(ServerGameEAO.class);
 	
-	private List<SteamServerManagerListener> steamServerManagerListeners = new ArrayList<>();
-	
-	public void addListener(SteamServerManagerListener steamServerManagerListener) {
-		steamServerManagerListeners.add(steamServerManagerListener);
+	private List<SteamServerManagerListener> steamServerManagerListeners;
+
+	public UpdateMonitorListenerAdapter(List<SteamServerManagerListener> steamServerManagerListeners) {
+		this.steamServerManagerListeners = steamServerManagerListeners;
 	}
 
 	@Override
     public void onNewUpdate(ServerGame serverGame) {
 		serverGameEAO.merge(serverGame);
 		
-		ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+		ServerGameDTO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameDTO.class);
 		
 		for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
 			steamServerManagerListener.onServerGameChanged(serverGameVO);
@@ -36,7 +35,7 @@ public class UpdateMonitorEventManager implements UpdateMonitorListener {
     public void onStartUpdate(ServerGame serverGame) {
     	serverGameEAO.merge(serverGame);
     	
-    	ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+    	ServerGameDTO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameDTO.class);
     	
     	for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
 	    	steamServerManagerListener.onServerGameChanged(serverGameVO);
@@ -48,7 +47,7 @@ public class UpdateMonitorEventManager implements UpdateMonitorListener {
     public void onCompletedUpdate(ServerGame serverGame) {
     	serverGameEAO.merge(serverGame);
     	
-    	ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+    	ServerGameDTO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameDTO.class);
     	
     	for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
 	    	steamServerManagerListener.onServerGameChanged(serverGameVO);

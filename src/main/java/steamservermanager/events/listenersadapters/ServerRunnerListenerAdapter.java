@@ -1,34 +1,33 @@
-package steamservermanager.events;
+package steamservermanager.events.listenersadapters;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import steamservermanager.dtos.ServerGameDTO;
 import steamservermanager.eao.ServerGameEAO;
 import steamservermanager.listeners.SteamServerManagerListener;
 import steamservermanager.models.ServerGame;
 import steamservermanager.serverrunner.listeners.ServerRunnerListener;
 import steamservermanager.utils.ObjectUtils;
 import steamservermanager.utils.ServiceProvider;
-import steamservermanager.vos.ServerGameVO;
 
-public class ServerRunnerEventManager implements ServerRunnerListener {
+public class ServerRunnerListenerAdapter implements ServerRunnerListener {
 
 	private ServerGameEAO serverGameEAO = ServiceProvider.provide(ServerGameEAO.class);
 
-	private List<SteamServerManagerListener> steamServerManagerListeners = new ArrayList<>();
+	private List<SteamServerManagerListener> steamServerManagerListeners;
 	
-	public void addListener(SteamServerManagerListener steamServerManagerListener) {
-		steamServerManagerListeners.add(steamServerManagerListener);
+	public ServerRunnerListenerAdapter(List<SteamServerManagerListener> steamServerManagerListeners) {
+		this.steamServerManagerListeners = steamServerManagerListeners;
 	}
 
 	@Override
     public void onServerStarted(ServerGame serverGame) {
 		serverGameEAO.merge(serverGame);
 		
-		ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+		ServerGameDTO serverGameDTO = ObjectUtils.copyObject(serverGame, ServerGameDTO.class);
 		
 		for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
-			steamServerManagerListener.onServerGameChanged(serverGameVO);
+			steamServerManagerListener.onServerGameChanged(serverGameDTO);
 		}
     }
 
@@ -36,10 +35,10 @@ public class ServerRunnerEventManager implements ServerRunnerListener {
     public void onServerStopped(ServerGame serverGame) {
     	serverGameEAO.merge(serverGame);
     	
-    	ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+    	ServerGameDTO serverGameDTO = ObjectUtils.copyObject(serverGame, ServerGameDTO.class);
     	
     	for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
-    		steamServerManagerListener.onServerGameChanged(serverGameVO);
+    		steamServerManagerListener.onServerGameChanged(serverGameDTO);
     	}
     }
 
@@ -47,10 +46,10 @@ public class ServerRunnerEventManager implements ServerRunnerListener {
     public void onServerException(ServerGame serverGame) {
     	serverGameEAO.merge(serverGame);
     	
-    	ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+    	ServerGameDTO serverGameDTO = ObjectUtils.copyObject(serverGame, ServerGameDTO.class);
     	
     	for (SteamServerManagerListener steamServerManagerListener : steamServerManagerListeners) {
-    		steamServerManagerListener.onServerGameChanged(serverGameVO);
+    		steamServerManagerListener.onServerGameChanged(serverGameDTO);
     	}
     }   
 

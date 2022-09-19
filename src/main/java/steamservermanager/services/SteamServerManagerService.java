@@ -2,7 +2,8 @@ package steamservermanager.services;
 
 import java.util.List;
 
-import steamservermanager.eao.ManagerEAO;
+import steamservermanager.dtos.ServerGameDTO;
+import steamservermanager.eao.ManagerSettingsEAO;
 import steamservermanager.eao.ServerGameEAO;
 import steamservermanager.events.EventManagerService;
 import steamservermanager.listeners.SteamServerManagerListener;
@@ -12,7 +13,6 @@ import steamservermanager.utils.ObjectUtils;
 import steamservermanager.utils.ServiceProvider;
 import steamservermanager.utils.StringUtils;
 import steamservermanager.validators.SteamServerManagerValidator;
-import steamservermanager.vos.ServerGameVO;
 
 public class SteamServerManagerService {
 	
@@ -25,10 +25,10 @@ public class SteamServerManagerService {
     public ServerGame create(ServerGame serverGame) {
     	String localNameNormalized = StringUtils.normalizeStringForDirectoryName(serverGame.getLocalName());
     	
-    	ManagerEAO managerEAO = ServiceProvider.provide(ManagerEAO.class);
+    	ManagerSettingsEAO managerEAO = ServiceProvider.provide(ManagerSettingsEAO.class);
     	
     	serverGame.setLocalName(localNameNormalized);
-    	serverGame.setManager(managerEAO.find(1L));
+    	serverGame.setManagerSettings(managerEAO.find(1L));
     	
     	validator.validadeNewServer(serverGame);
         serverGameEAO.persist(serverGame);
@@ -41,17 +41,16 @@ public class SteamServerManagerService {
     public ServerGame update(ServerGame serverGame) {
     	serverGameEAO.merge(serverGame);
     	
-    	ServerGameVO serverGameVO = ObjectUtils.copyObject(serverGame, ServerGameVO.class);
+    	ServerGameDTO serverGameDTO = ObjectUtils.copyObject(serverGame, ServerGameDTO.class);
     	
     	for(SteamServerManagerListener steamServerManagerListener : eventManager.getSteamServerManagerListeners()) {
-    		steamServerManagerListener.onServerGameChanged(serverGameVO);
+    		steamServerManagerListener.onServerGameChanged(serverGameDTO);
     	}
 
     	return serverGame;
     }
     
     public void startUpdateServerGame(ServerGame serverGame) {
-    	serverRunnerService.stopServer(serverGame);
     	updaterServerGameService.update(serverGame);
     }
     
@@ -60,7 +59,7 @@ public class SteamServerManagerService {
     }
     
     public List<ServerGame> getServerList() {
-    	List<ServerGame> serverList = serverGameEAO.findAllServerGame();
+    	List<ServerGame> serverList = serverGameEAO.findAll();
     	
     	return serverList;
     }

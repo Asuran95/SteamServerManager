@@ -22,7 +22,7 @@ public class UpdateWorker extends Thread {
             
             steamCmd.start();
             
-            String localLibrary = updateJob.getManager().getLocalLibrary();
+            String localLibrary = updateJob.getManagerSettings().getLocalLibrary();
 
             File localDir = new File(localLibrary + File.separator + updateJob.getLocalName());
 

@@ -1,10 +1,10 @@
 package steamservermanager;
 
 import steamservermanager.eao.EntityManagerSingleton;
-import steamservermanager.eao.ManagerEAO;
+import steamservermanager.eao.ManagerSettingsEAO;
 import steamservermanager.events.EventManagerService;
 import steamservermanager.listeners.SteamServerManagerListener;
-import steamservermanager.models.Manager;
+import steamservermanager.models.ManagerSettings;
 import steamservermanager.utils.ServiceProvider;
 
 public class SteamServerManagerBuilder {
@@ -27,7 +27,7 @@ public class SteamServerManagerBuilder {
 	public SteamServerManager build() {
 		setupEntityManager(localLibrary);
 		
-		createOrUpdateManager(localLibrary);
+		createOrUpdateManagerSettings(localLibrary);
 		
 		EventManagerService eventManager = ServiceProvider.provide(EventManagerService.class);
 		eventManager.addListener(listener);
@@ -39,21 +39,21 @@ public class SteamServerManagerBuilder {
 		EntityManagerSingleton.init(localLibrary);
 	}
 	
-	private void createOrUpdateManager(String localLibrary) {
-		ManagerEAO managerEAO = ServiceProvider.provide(ManagerEAO.class);
+	private void createOrUpdateManagerSettings(String localLibrary) {
+		ManagerSettingsEAO managerSettingsEAO = ServiceProvider.provide(ManagerSettingsEAO.class);
 		
-		Manager manager = managerEAO.find(1L);
+		ManagerSettings manager = managerSettingsEAO.find(1L);
 		
 		if (manager == null) {
-			manager = new Manager();
+			manager = new ManagerSettings();
 			manager.setIdManager(1L);
 			manager.setLocalLibrary(localLibrary);
 			
-			managerEAO.persist(manager);
+			managerSettingsEAO.persist(manager);
 		} else {
 			manager.setLocalLibrary(localLibrary);
 			
-			managerEAO.merge(manager);
+			managerSettingsEAO.merge(manager);
 		}
 	}
 }

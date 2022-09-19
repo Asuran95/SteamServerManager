@@ -12,11 +12,22 @@ public class ServerGameEAO extends AbstractEAO<ServerGame> {
 		super(ServerGame.class);
 	}
 
-	public synchronized List<ServerGame> findAllServerGame(){
+	public synchronized List<ServerGame> findAll(){
 		StringBuilder sb = new StringBuilder();
 		sb.append(" select sg from ServerGame sg ");
 		
 		TypedQuery<ServerGame> query = createQuery(sb, ServerGame.class);
+
+		return getResultList(query);
+	}
+	
+	public synchronized List<ServerGame> findByAppID(Integer appId){
+		StringBuilder sb = new StringBuilder();
+		sb.append(" select sg from ServerGame sg ");
+		sb.append(" where sg.appID = :appID ");
+		
+		TypedQuery<ServerGame> query = createQuery(sb, ServerGame.class);
+		query.setParameter("appID", appId);
 
 		return getResultList(query);
 	}

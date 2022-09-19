@@ -1,8 +1,8 @@
-package steamservermanager.vos;
+package steamservermanager.dtos;
 
-import steamservermanager.models.enums.Status;
+import steamservermanager.models.enums.ServerStatus;
 
-public class ServerGameVO {
+public class ServerGameDTO {
 	
 	private Long idServerGame;
     
@@ -18,7 +18,7 @@ public class ServerGameVO {
     
     private String gameName;
     
-    private Status status;
+    private ServerStatus status;
 
 	public Long getIdServerGame() {
 		return idServerGame;
@@ -76,11 +76,15 @@ public class ServerGameVO {
 		this.gameName = gameName;
 	}
 
-	public Status getStatus() {
+	public ServerStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public void setStatus(ServerStatus status) {
 		this.status = status;
+	}
+	
+	public String getName() {
+		return serverName != null && !serverName.equals("") ? serverName : localName;
 	}
 }

@@ -10,11 +10,10 @@ import steamservermanager.utils.ServiceProvider;
 public class UpdaterServerGameService {
 
 	private UpdaterServerGame updater;
-	
 	private EventManagerService eventManager = ServiceProvider.provide(EventManagerService.class);
+	private ServerRunnerService serverRunnerService = ServiceProvider.provide(ServerRunnerService.class);
 	
 	public UpdaterServerGameService() {
-		
 		setupUpdater();
 	}
 
@@ -23,7 +22,7 @@ public class UpdaterServerGameService {
 		if (updater == null) {
 			setupUpdater();
 		}
-		
+		serverRunnerService.stopServer(serverGame);
 		updater.addUpdate(serverGame);
 	}
 	

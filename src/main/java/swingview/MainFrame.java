@@ -27,17 +27,18 @@ import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
 
 import steamservermanager.SteamServerManager;
 import steamservermanager.SteamServerManagerBuilder;
+import steamservermanager.dtos.DiscordBotDTO;
+import steamservermanager.dtos.ServerGameDTO;
 import steamservermanager.listeners.SteamServerManagerListener;
-import steamservermanager.models.enums.Status;
+import steamservermanager.models.enums.ServerStatus;
 import steamservermanager.serverrunner.interfaces.ServerProperties;
-import steamservermanager.vos.ServerGameVO;
 
 
 public class MainFrame extends javax.swing.JFrame {
 
     private SteamServerManager steamServerManager;
     private List<ServerGameConsole> serverGameConsoleList = new ArrayList<>();
-    private List<ServerGameVO> serverGameLibrary = new ArrayList<>();
+    private List<ServerGameDTO> serverGameLibrary = new ArrayList<>();
     
     
     /**
@@ -76,7 +77,7 @@ public class MainFrame extends javax.swing.JFrame {
 
                     JPopupMenu popup = new JPopupMenu("Actions");
               
-                    Status status = getSelectedServer().getStatus();
+                    ServerStatus status = getSelectedServer().getStatus();
                     
                     JMenuItem startItem = null;
                     JMenuItem stopItem = null;
@@ -85,8 +86,8 @@ public class MainFrame extends javax.swing.JFrame {
                     JMenuItem updateItem = null;
                     JMenuItem removeItem = null;
                     
-                    if (status == Status.RUNNING || status == Status.STOPPED) {
-                        if (status == Status.RUNNING) {
+                    if (status == ServerStatus.RUNNING || status == ServerStatus.STOPPED) {
+                        if (status == ServerStatus.RUNNING) {
                             consoleItem = new JMenuItem("Open Console");
                             
                             consoleItem.setFont(consoleItem.getFont().deriveFont(Font.BOLD));
@@ -170,9 +171,29 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaSteamCMD = new javax.swing.JTextArea();
+        jPanelSettings = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jTextFieldDiscordBotPrefix = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldDiscordBotOwnerUserId = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jButtonSaveDiscordBot = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jTextFieldStatusBotDiscord = new javax.swing.JTextField();
+        jToggleButtonStartDiscordBot = new javax.swing.JToggleButton();
+        jPasswordFieldDiscordBotToken = new javax.swing.JPasswordField();
+        jPanel5 = new javax.swing.JPanel();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jCheckBox2 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Steam Server Manager");
+        setMaximumSize(new java.awt.Dimension(1020, 680));
+        setMinimumSize(new java.awt.Dimension(1020, 680));
+        setUndecorated(true);
+        setResizable(false);
 
         jButtonOpenLibrary.setText("Open");
         jButtonOpenLibrary.addActionListener(new java.awt.event.ActionListener() {
@@ -236,7 +257,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 992, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButtonOpenLibrary)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -261,7 +282,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonNewServer, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jProgressBarUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
@@ -283,18 +304,176 @@ public class MainFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 992, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("SteamCMD Console", jPanel2);
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("DiscordBOT"));
+
+        jLabel1.setText("Prefix");
+
+        jTextFieldDiscordBotPrefix.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldDiscordBotPrefixActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Owner UserID");
+
+        jLabel3.setText("Token");
+
+        jButtonSaveDiscordBot.setText("Save");
+        jButtonSaveDiscordBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveDiscordBotActionPerformed(evt);
+            }
+        });
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Status DiscordBOT"));
+
+        jLabel4.setFont(new java.awt.Font("Noto Sans", 1, 13)); // NOI18N
+        jLabel4.setText("Status");
+
+        jTextFieldStatusBotDiscord.setEditable(false);
+        jTextFieldStatusBotDiscord.setFont(new java.awt.Font("Droid Sans Mono", 1, 13)); // NOI18N
+
+        jToggleButtonStartDiscordBot.setText("Start");
+        jToggleButtonStartDiscordBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonStartDiscordBotActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jTextFieldStatusBotDiscord)))
+                .addContainerGap())
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(102, 102, 102)
+                .addComponent(jToggleButtonStartDiscordBot, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(104, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldStatusBotDiscord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButtonStartDiscordBot)
+                .addGap(0, 8, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPasswordFieldDiscordBotToken)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jTextFieldDiscordBotPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                            .addComponent(jLabel3)
+                            .addComponent(jButtonSaveDiscordBot, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldDiscordBotOwnerUserId))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldDiscordBotPrefix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldDiscordBotOwnerUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPasswordFieldDiscordBotToken, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonSaveDiscordBot))
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Misc"));
+
+        jCheckBox1.setText("Auto restart server when crash");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
+        jCheckBox2.setText("Auto start DiscordBOT");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBox2)
+                    .addComponent(jCheckBox1))
+                .addContainerGap(164, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox2)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanelSettingsLayout = new javax.swing.GroupLayout(jPanelSettings);
+        jPanelSettings.setLayout(jPanelSettingsLayout);
+        jPanelSettingsLayout.setHorizontalGroup(
+            jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSettingsLayout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanelSettingsLayout.setVerticalGroup(
+            jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSettingsLayout.createSequentialGroup()
+                .addGroup(jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 400, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Settings", jPanelSettings);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -311,6 +490,9 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonOpenLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenLibraryActionPerformed
+    	LoadingFrame loadingFrame = new LoadingFrame();
+        loadingFrame.setVisible(true);
+        
         JFileChooser chooser;
         chooser = new JFileChooser();
         chooser.setCurrentDirectory(new java.io.File("."));
@@ -320,22 +502,32 @@ public class MainFrame extends javax.swing.JFrame {
         chooser.setAcceptAllFileFilterUsed(false);
            
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-        	
         	SteamServerManagerBuilder steamServerManagerBuilder = 
         			new SteamServerManagerBuilder().setListener(new SteamServerManagerListenerImpl())
         											.setLocalLibrary(chooser.getSelectedFile().toString());
             
             steamServerManager = steamServerManagerBuilder.build();
-            
             steamServerManager.startManager();
+
+            DiscordBotDTO discordBot = steamServerManager.getDiscordBot();
             
+            if (discordBot != null){
+                jTextFieldDiscordBotPrefix.setText(discordBot.getPrefix());
+                jTextFieldDiscordBotOwnerUserId.setText(discordBot.getOwnerUserId()+"");
+                jPasswordFieldDiscordBotToken.setText(discordBot.getToken());
+            }
+
             jLabelLocalLibrary.setText(chooser.getSelectedFile().toString());
             
             jButtonNewServer.setEnabled(true);
             jButtonOpenLibrary.setEnabled(false);
             
             updateJTableLibrary();
+            jPanelSettings.setEnabled(true);
+            
         }
+        
+        loadingFrame.setVisible(false);
     }//GEN-LAST:event_jButtonOpenLibraryActionPerformed
 
     private void jButtonNewServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNewServerActionPerformed
@@ -344,11 +536,54 @@ public class MainFrame extends javax.swing.JFrame {
         newServerFrame.setVisible(true);  
     }//GEN-LAST:event_jButtonNewServerActionPerformed
 
+    private void jTextFieldDiscordBotPrefixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDiscordBotPrefixActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldDiscordBotPrefixActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jToggleButtonStartDiscordBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonStartDiscordBotActionPerformed
+
+        if (jToggleButtonStartDiscordBot.getModel().isSelected()){
+        	jToggleButtonStartDiscordBot.setEnabled(false);
+        	jToggleButtonStartDiscordBot.setSelected(false);
+            steamServerManager.startDiscordBot();
+        } else {
+        	steamServerManager.stopDiscordBot();
+        }
+    }//GEN-LAST:event_jToggleButtonStartDiscordBotActionPerformed
+
+    private void jButtonSaveDiscordBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveDiscordBotActionPerformed
+        
+        String prefix = jTextFieldDiscordBotPrefix.getText();
+        String ownerUserIdString = jTextFieldDiscordBotOwnerUserId.getText();
+        String token = new String(jPasswordFieldDiscordBotToken.getPassword());
+        
+        Long ownerUserId = null;
+        
+        try{
+            ownerUserId = Long.valueOf(ownerUserIdString);
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Invalid Owner User ID.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        DiscordBotDTO discordbotDTO = new DiscordBotDTO();
+        discordbotDTO.setPrefix(prefix);
+        discordbotDTO.setOwnerUserId(ownerUserId);
+        discordbotDTO.setToken(token);
+        
+        steamServerManager.setDiscordBot(discordbotDTO);
+    }//GEN-LAST:event_jButtonSaveDiscordBotActionPerformed
+
     private void startSelectedServer() {
         int jTableIndexSelected = jTableLibrary.getSelectedRow();
         
         if (jTableIndexSelected >= 0){
-        	ServerGameVO serverGameSelected = getSelectedServer();
+        	ServerGameDTO serverGameSelected = getSelectedServer();
             
             ServerGameConsole serverGameConsoleFound = getServerConsole(serverGameSelected);
                 
@@ -368,7 +603,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
-    private ServerGameConsole getServerConsole(ServerGameVO selectedServer){
+    private ServerGameConsole getServerConsole(ServerGameDTO selectedServer){
                 
         for (ServerGameConsole serverGameConsole : serverGameConsoleList){
             if (serverGameConsole.getServerProperties().getServerGame().getIdServerGame().equals(selectedServer.getIdServerGame())){
@@ -380,7 +615,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     private void updateSelectedServer() {
-    	ServerGameVO selectedServer = getSelectedServer();
+    	ServerGameDTO selectedServer = getSelectedServer();
         
         steamServerManager.startUpdateServerGame(selectedServer);
         
@@ -398,6 +633,9 @@ public class MainFrame extends javax.swing.JFrame {
         if (serverConsole != null){
             serverConsole.forceStop();
             serverConsole.setVisible(false);
+        } else {
+        	startSelectedServer();
+        	stopSelectedServer();
         }
     }
     
@@ -416,6 +654,9 @@ public class MainFrame extends javax.swing.JFrame {
         
         if(serverConsole != null){
             serverConsole.setVisible(true);
+        } else {
+        	startSelectedServer();
+        	openConsoleSelectedServer();
         }
     }
     
@@ -425,7 +666,7 @@ public class MainFrame extends javax.swing.JFrame {
         editServerGameFrame.setVisible(true);
     }
 
-    private ServerGameVO getSelectedServer() {
+    private ServerGameDTO getSelectedServer() {
         int jTableIndexSelected = jTableLibrary.getSelectedRow();
         
         if (jTableIndexSelected != -1) {
@@ -471,9 +712,21 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonNewServer;
     private javax.swing.JButton jButtonOpenLibrary;
+    private javax.swing.JButton jButtonSaveDiscordBot;
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabelLocalLibrary;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanelSettings;
+    private javax.swing.JPasswordField jPasswordFieldDiscordBotToken;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JProgressBar jProgressBarUpdate;
     private javax.swing.JScrollPane jScrollPane1;
@@ -482,31 +735,22 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableLibrary;
     private javax.swing.JTextArea jTextAreaSteamCMD;
+    private javax.swing.JTextField jTextFieldDiscordBotOwnerUserId;
+    private javax.swing.JTextField jTextFieldDiscordBotPrefix;
+    private javax.swing.JTextField jTextFieldStatusBotDiscord;
+    private javax.swing.JToggleButton jToggleButtonStartDiscordBot;
     // End of variables declaration//GEN-END:variables
     
     
     public synchronized void updateJTableLibrary(){
     	SwingUtilities.invokeLater(() -> {
-    		
-//    		try {
-//				UIManager.setLookAndFeel("com.jtattoo.plaf.luna.LunaLookAndFeel");
-//				
-//				
-//				SwingUtilities.updateComponentTreeUI(this);
-//				
-//			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-//					| UnsupportedLookAndFeelException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-    		
 			serverGameLibrary = steamServerManager.getServerList();
 	        
 	        DefaultTableModel model = (DefaultTableModel) jTableLibrary.getModel();
 	        
 	        model.setRowCount(0);
 	        
-	        for (ServerGameVO s : serverGameLibrary){
+	        for (ServerGameDTO s : serverGameLibrary){
 	            String[] linha = { s.getLocalName(), s.getServerName(), s.getGameName(), s.getAppID()+ "", s.getStatus().toString() };
 	        
 	            model.addRow(linha);
@@ -517,7 +761,7 @@ public class MainFrame extends javax.swing.JFrame {
     class SteamServerManagerListenerImpl implements SteamServerManagerListener{
 
         private CircularFifoQueue<String> mensagemFifo = new CircularFifoQueue<>(500);
-        private ServerGameVO serverGameAtual;
+        private ServerGameDTO serverGameAtual;
         
         @Override
         public void onSteamCMDStdOut(String out) {
@@ -533,7 +777,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
         @Override
-        public void onServerGameChanged(ServerGameVO serverGame) {
+        public void onServerGameChanged(ServerGameDTO serverGame) {
             updateJTableLibrary();
         }
 
@@ -559,15 +803,34 @@ public class MainFrame extends javax.swing.JFrame {
         }
 
         @Override
-        public void onStartUpdateServerGame(ServerGameVO serverGame) {
+        public void onStartUpdateServerGame(ServerGameDTO serverGame) {
             serverGameAtual = serverGame;
         }
 
         @Override
-        public void onCompletedUpdateServerGame(ServerGameVO serverGame) {
+        public void onCompletedUpdateServerGame(ServerGameDTO serverGame) {
             serverGameAtual = null;
             jProgressBarUpdate.setString("");
             jProgressBarUpdate.setValue(0);
         }
+
+		@Override
+		public void onDiscordBotChangedStatus(String status) {
+			jTextFieldStatusBotDiscord.setText(status);
+		}
+
+		@Override
+		public void onDiscordBotStarted() {
+			jToggleButtonStartDiscordBot.setSelected(true);
+			jToggleButtonStartDiscordBot.setEnabled(true);
+			jToggleButtonStartDiscordBot.setText("Stop");
+		}
+
+		@Override
+		public void onDiscordBotStopped() {
+			jToggleButtonStartDiscordBot.setEnabled(true);
+			jToggleButtonStartDiscordBot.setSelected(false);
+			jToggleButtonStartDiscordBot.setText("Start");
+		}
     } 
 }

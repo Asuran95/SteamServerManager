@@ -1,6 +1,6 @@
 package steamservermanager.listeners;
 
-import steamservermanager.vos.ServerGameVO;
+import steamservermanager.dtos.ServerGameDTO;
 
 public interface SteamServerManagerListener {
 	
@@ -8,9 +8,15 @@ public interface SteamServerManagerListener {
     
     void onStatusSteamCMD(String status, double pctUpdate);
     
-    void onServerGameChanged(ServerGameVO serverGame);
+    void onServerGameChanged(ServerGameDTO serverGameDTO);
     
-    void onStartUpdateServerGame(ServerGameVO serverGame);
+    void onStartUpdateServerGame(ServerGameDTO serverGameDTO);
     
-    void onCompletedUpdateServerGame(ServerGameVO serverGame);  
+    void onCompletedUpdateServerGame(ServerGameDTO serverGameDTO);  
+    
+    void onDiscordBotChangedStatus(String status);
+    
+    void onDiscordBotStarted();
+    
+    void onDiscordBotStopped();
 }
