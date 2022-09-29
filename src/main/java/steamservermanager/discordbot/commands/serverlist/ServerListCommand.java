@@ -3,8 +3,7 @@ package steamservermanager.discordbot.commands.serverlist;
 import java.util.List;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import steamservermanager.discordbot.commands.DiscordCommandHandler;
 import steamservermanager.eao.ServerGameEAO;
 import steamservermanager.models.ServerGame;
@@ -16,14 +15,12 @@ public class ServerListCommand extends DiscordCommandHandler {
 	private ServerGameEAO serverGameEAO = ServiceProvider.provide(ServerGameEAO.class);
 
 	@Override
-	protected void action(MessageReceivedEvent event, String[] commands) {
+	protected void action(SlashCommandInteractionEvent event) {
 		replyServerList(event);
 	}
 	
-	private void replyServerList(MessageReceivedEvent event) {
+	private void replyServerList(SlashCommandInteractionEvent event) {
 		List<ServerGame> serverList = serverGameEAO.findAll();
-		
-		MessageChannelUnion channel = event.getChannel();
 		
 		if (!serverList.isEmpty()) {
 			EmbedBuilder embed = new EmbedBuilder();
@@ -42,7 +39,7 @@ public class ServerListCommand extends DiscordCommandHandler {
 			embed.setFooter(DiscordUtils.getFooterDescription());
 			embed.setColor(DiscordUtils.getDefaultEmbedColor());
 			
-			channel.sendMessageEmbeds(embed.build()).complete();
+			event.replyEmbeds(embed.build()).queue();
 			
 		} else {
 			throw new RuntimeException("The server library is empty.");

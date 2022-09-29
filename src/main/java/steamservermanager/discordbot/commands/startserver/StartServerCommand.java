@@ -1,6 +1,6 @@
 package steamservermanager.discordbot.commands.startserver;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import steamservermanager.discordbot.commands.DiscordCommandHandler;
 import steamservermanager.eao.ServerGameEAO;
 import steamservermanager.models.ServerGame;
@@ -16,46 +16,30 @@ public class StartServerCommand extends DiscordCommandHandler {
 	}
 	
 	@Override
-	protected void action(MessageReceivedEvent event, String[] commands) {
+	protected void action(SlashCommandInteractionEvent event) {
+		long id = event.getOption("id").getAsLong();
 		
-		Long id = getIdServerGameParameter(commands);
-		
-		if (id != null) {
+		if (id >= 1) {
 			startServerById(event, id);
-		} else {
-			throw new RuntimeException("Invalid Command!");
 		}
 	}
 	
-	private void startServerById(MessageReceivedEvent event, Long id) {
+	private void startServerById(SlashCommandInteractionEvent event, Long id) {
 		ServerGame serverGame = serverGameEAO.find(id);
 		
 		if (serverGame == null) {
-			throw new RuntimeException("There is no game server with this ID.");
+			//throw new RuntimeException("There is no game server with this ID.");
+			event.reply("There is no game server with this ID.").setEphemeral(true).queue();
+			return;
 		}
 		
 		startServerGame(event, serverGame);
+		event.reply("Server #" + id + " - " + serverGame.getName() + " (" + serverGame.getGameName() + ")" + " has been initialized.").queue();
 	}
 	
-	private void startServerGame(MessageReceivedEvent event, ServerGame serverGame) {
+	private void startServerGame(SlashCommandInteractionEvent event, ServerGame serverGame) {
 		ServerRunnerService serverRunnerService = ServiceProvider.provide(ServerRunnerService.class);
 		serverRunnerService.startServer(serverGame);
-	}
-	
-	private Long getIdServerGameParameter(String[] commands) {
-		Long id = null;
-		
-		try {
-			if (commands.length == 1) {
-				String param = commands[0];
-				id = Long.valueOf(param);
-			}
-
-		} catch (Exception ex) {
-			throw new RuntimeException("Invalid Parameter!");
-		}
-		
-		return id;
 	}
 	
 	@Override

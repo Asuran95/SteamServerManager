@@ -3,7 +3,9 @@ package steamservermanager.services;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDA.Status;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import steamservermanager.discordbot.SteamServerManagerDiscordBot;
 import steamservermanager.discordbot.listener.DiscordBotListener;
 import steamservermanager.eao.DiscordBotEAO;
@@ -43,21 +45,48 @@ public class DiscordBotService {
 		DiscordBot discordBot = discordBotEAO.find(1L);
 		
 		DiscordBotListener discordBotListener = eventManager.getDiscordBotListener();
-		
+
 		try {
 			if (discordBot != null) {
 				jda = JDABuilder.createDefault(discordBot.getToken())
-				          .enableIntents(GatewayIntent.GUILD_MEMBERS)
-				          .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-				          .enableIntents(GatewayIntent.GUILD_MESSAGES) 
 				          .addEventListeners(new SteamServerManagerDiscordBot(discordBot.getPrefix(), eventManager.getDiscordBotListener()))
 				          .build();
-			}
+				restartSlashCommands();
+			}			
 		} catch (Exception ex) {
 			discordBotListener.onDiscordBotChangedStatus(ex.getMessage());
 			discordBotListener.onDiscordBotStopped();
 		}
 
+	}
+	
+	private void restartSlashCommands() {
+		CommandListUpdateAction commands = jda.updateCommands();
+
+		commands.addCommands(
+			Commands.slash("serverlist", "Shows the list of available servers.")
+		);
+		
+		commands.addCommands(
+			Commands.slash("updateall", "Updates all listed servers.")
+		);
+		
+		commands.addCommands(
+			Commands.slash("updategame", "Updates all servers from a specific game.")
+				.addOption(OptionType.INTEGER, "steamid", "SteamID of the game.", true)
+		);
+		
+		commands.addCommands(
+			Commands.slash("updateserver", "Updates a specific server.")
+				.addOption(OptionType.INTEGER, "serverid", "ServerID from the list.", true)
+		);
+		
+		commands.addCommands(
+			Commands.slash("startserver", "Starts one of the available servers from the list.")
+				.addOption(OptionType.INTEGER, "id", "The server's ID.", true)
+		);
+		
+		commands.queue();
 	}
 	
 	public Status getStatus() {
