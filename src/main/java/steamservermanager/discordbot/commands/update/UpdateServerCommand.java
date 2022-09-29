@@ -24,13 +24,29 @@ public class UpdateServerCommand extends DiscordCommandHandler {
 		
 		if (subcommandName.equals("all")) {
 			
+
+			event.reply(event.getUser().getName() + " has initiated a full update.").queue();
+			
 			updateAllServers(event);
 			
 			return;
 			
 		} else if (subcommandName.equals("game")) {
 			
+			
 			int steamId = event.getOption("name").getAsInt();
+			String gameName = null;
+			List<ServerGame> serverList = serverGameEAO.findAll();
+			
+			for (ServerGame serverGame : serverList) {
+				if (serverGame.getAppID().equals(steamId)) {
+					gameName = serverGame.getGameName();
+					break;
+				}
+			}
+			
+			event.reply(event.getUser().getName() + " has initiated an update for all `" + gameName + "` servers.").queue();
+			
 			updateServersbySteamID(event, steamId);
 			
 			return;
@@ -38,6 +54,9 @@ public class UpdateServerCommand extends DiscordCommandHandler {
 		} else if (subcommandName.equals("server")) {
 			
 			long id = event.getOption("name").getAsLong();
+			
+			event.reply(event.getUser().getName() + " has initiated an update for the server `" + serverGameEAO.findServerGameById(id).getServerName() + "`.").queue();
+			
 			updateServerById(event, id);
 			
 			return;
@@ -76,7 +95,7 @@ public class UpdateServerCommand extends DiscordCommandHandler {
 		if (serverGame == null) {
 			throw new RuntimeException("There is no game server with this ID.");
 		}
-
+		
 		updateServerGame(event, serverGame);
 	}
 
