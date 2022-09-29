@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.events.StatusChangeEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import steamservermanager.discordbot.commands.DiscordCommandHandler;
+import steamservermanager.discordbot.commands.controlserver.ControlServerCommand;
 import steamservermanager.discordbot.commands.serverlist.ServerListCommand;
-import steamservermanager.discordbot.commands.startserver.StartServerCommand;
 import steamservermanager.discordbot.commands.update.UpdateServerCommand;
 import steamservermanager.discordbot.listener.DiscordBotListener;
 
@@ -26,7 +26,7 @@ public class SteamServerManagerDiscordBot extends ListenerAdapter {
 		
 		map.put("update", new UpdateServerCommand());
 		map.put("show", new ServerListCommand());
-		map.put("server", new StartServerCommand());
+		map.put("server", new ControlServerCommand());
 	}
 
 	@Override

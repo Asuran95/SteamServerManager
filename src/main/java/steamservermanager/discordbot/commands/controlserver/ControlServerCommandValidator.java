@@ -1,4 +1,4 @@
-package steamservermanager.discordbot.commands.startserver;
+package steamservermanager.discordbot.commands.controlserver;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import steamservermanager.discordbot.commands.DiscordCommandValidator;
@@ -6,7 +6,7 @@ import steamservermanager.eao.DiscordBotEAO;
 import steamservermanager.models.DiscordBot;
 import steamservermanager.utils.ServiceProvider;
 
-public class StartServerCommandValidator extends DiscordCommandValidator {
+public class ControlServerCommandValidator extends DiscordCommandValidator {
 	
 	@Override
 	public void validateEvent(SlashCommandInteractionEvent event) {
