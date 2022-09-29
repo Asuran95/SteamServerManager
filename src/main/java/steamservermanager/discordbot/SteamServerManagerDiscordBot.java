@@ -25,8 +25,8 @@ public class SteamServerManagerDiscordBot extends ListenerAdapter {
 		this.discordBotListener = discordBotListener;
 		
 		map.put("update", new UpdateServerCommand());
-		map.put("serverlist", new ServerListCommand());
-		map.put("startserver", new StartServerCommand());
+		map.put("show", new ServerListCommand());
+		map.put("server", new StartServerCommand());
 	}
 
 	@Override

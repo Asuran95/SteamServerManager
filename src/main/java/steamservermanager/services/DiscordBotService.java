@@ -1,6 +1,5 @@
 package steamservermanager.services;
 
-import java.lang.management.GarbageCollectorMXBean;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,27 +71,32 @@ public class DiscordBotService {
 	private void restartSlashCommands() {
 		CommandListUpdateAction commands = jda.updateCommands();
 		
-		OptionData subcommandGameOption = 
+		OptionData subcommandUpdateGameOption = 
 				populateGameOption(new OptionData(OptionType.INTEGER, "name", "Game's name", true));
-		OptionData subcommandServerOption = 
+		OptionData subcommandServerNameOption = 
 				populateServerOption(new OptionData(OptionType.INTEGER, "name", "Server's name", true));
-
-		commands.addCommands(
-			Commands.slash("serverlist", "Shows the list of available servers.")
+		
+		commands.addCommands(Commands.slash("show", "Show information about the server list")
+				.addSubcommands(new SubcommandData("list", "Shows all the servers."))
 		);
 		
-		commands.addCommands(
-			Commands.slash("startserver", "Starts one of the available servers from the list.")
-				.addOption(OptionType.INTEGER, "id", "The server's ID.", true)
+		
+		commands.addCommands(Commands.slash("server", "Starts or stops one of the available servers from the list.")
+				.addSubcommands(new SubcommandData("start", "Starts one of the available servers from the list.")
+					.addOptions(subcommandServerNameOption)
+				)
+				.addSubcommands(new SubcommandData("stop", "Stops one of the available servers from the list.")
+					.addOptions(subcommandServerNameOption)
+				)
 		);
 		
-		commands.addCommands(Commands.slash("update", "Update all servers, all servers of a specific game or a specific server")
+		commands.addCommands(Commands.slash("update", "Update all servers, all servers of a specific game or just a specific server")
 				.addSubcommands(new SubcommandData("all", "Updates every server from the list."))
 				.addSubcommands(new SubcommandData("game", "Updates all games from it's Steam ID")
-						.addOptions(subcommandGameOption)
+						.addOptions(subcommandUpdateGameOption)
 				)
 				.addSubcommands(new SubcommandData("server", "Updates a specific server")
-						.addOptions(subcommandServerOption)
+						.addOptions(subcommandServerNameOption)
 				)
 		);
 		
