@@ -1,6 +1,5 @@
 package steamservermanager.discordbot.commands;
 
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public abstract class DiscordCommandHandler implements DiscordCommand {
@@ -24,9 +23,7 @@ public abstract class DiscordCommandHandler implements DiscordCommand {
 			action(event);
 			
 		} catch (Exception ex) {
-			MessageChannelUnion channel = event.getChannel();
-			
-			channel.sendMessage("`" + ex.getMessage() + "`").complete();
+			event.reply("`" + ex.getMessage() + "`").queue();
 		}
 	}
 	
