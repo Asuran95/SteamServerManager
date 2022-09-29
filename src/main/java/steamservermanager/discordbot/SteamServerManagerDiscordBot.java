@@ -13,8 +13,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import steamservermanager.discordbot.commands.DiscordCommandHandler;
 import steamservermanager.discordbot.commands.serverlist.ServerListCommand;
 import steamservermanager.discordbot.commands.startserver.StartServerCommand;
-import steamservermanager.discordbot.commands.update.UpdateAllServersCommand;
-import steamservermanager.discordbot.commands.update.UpdateGameServersCommand;
 import steamservermanager.discordbot.commands.update.UpdateServerCommand;
 import steamservermanager.discordbot.listener.DiscordBotListener;
 
@@ -26,10 +24,7 @@ public class SteamServerManagerDiscordBot extends ListenerAdapter {
 	public SteamServerManagerDiscordBot(String prefix, DiscordBotListener discordBotListener) {
 		this.discordBotListener = discordBotListener;
 		
-		//map.put("update", new UpdateServerCommand());
-		map.put("updateall", new UpdateAllServersCommand());
-		map.put("updategame", new UpdateGameServersCommand());
-		map.put("updateserver", new UpdateServerCommand());
+		map.put("update", new UpdateServerCommand());
 		map.put("serverlist", new ServerListCommand());
 		map.put("startserver", new StartServerCommand());
 	}
