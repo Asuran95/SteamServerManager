@@ -17,20 +17,30 @@ public class StartServerCommand extends DiscordCommandHandler {
 	
 	@Override
 	protected void action(SlashCommandInteractionEvent event) {
-		long id = event.getOption("id").getAsLong();
+
+		String subcommandName = event.getSubcommandName();
 		
-		if (id >= 1) {
+		if (subcommandName.equals("start")) {
+			
+			long id = event.getOption("name").getAsLong();
 			startServerById(event, id);
+			
+			return;
+			
+		} else if (subcommandName.equals("stop")) {
+			
+			event.reply("This option is a work in progress!").queue();
+			
+			return;
 		}
+		
 	}
 	
 	private void startServerById(SlashCommandInteractionEvent event, Long id) {
 		ServerGame serverGame = serverGameEAO.find(id);
 		
 		if (serverGame == null) {
-			//throw new RuntimeException("There is no game server with this ID.");
-			event.reply("There is no game server with this ID.").setEphemeral(true).queue();
-			return;
+			throw new RuntimeException("There is no game server with this ID.");
 		}
 		
 		startServerGame(event, serverGame);

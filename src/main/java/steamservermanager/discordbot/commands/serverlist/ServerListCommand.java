@@ -16,7 +16,14 @@ public class ServerListCommand extends DiscordCommandHandler {
 
 	@Override
 	protected void action(SlashCommandInteractionEvent event) {
-		replyServerList(event);
+		String subcommandName = event.getSubcommandName();
+		
+		if (subcommandName.equals("list")) {
+
+			replyServerList(event);
+			
+			return;
+		} 
 	}
 	
 	private void replyServerList(SlashCommandInteractionEvent event) {
