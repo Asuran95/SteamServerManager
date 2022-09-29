@@ -1,10 +1,10 @@
 package steamservermanager.discordbot.commands;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public interface DiscordCommand {
 	
-	void performAction(MessageReceivedEvent event, String[] commands);
+	void performAction(SlashCommandInteractionEvent event);
 	
 	String help();
 

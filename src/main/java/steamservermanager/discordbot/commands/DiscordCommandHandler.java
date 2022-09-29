@@ -1,7 +1,7 @@
 package steamservermanager.discordbot.commands;
 
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public abstract class DiscordCommandHandler implements DiscordCommand {
 	
@@ -14,14 +14,14 @@ public abstract class DiscordCommandHandler implements DiscordCommand {
 	}
 
 	@Override
-	public void performAction(MessageReceivedEvent event, String[] commands) {
+	public void performAction(SlashCommandInteractionEvent event) {
 		
 		try {
 			if (validator != null) {
 				validator.validateEvent(event);
 			}
 
-			action(event, commands);
+			action(event);
 			
 		} catch (Exception ex) {
 			MessageChannelUnion channel = event.getChannel();
@@ -30,6 +30,6 @@ public abstract class DiscordCommandHandler implements DiscordCommand {
 		}
 	}
 	
-	protected abstract void action(MessageReceivedEvent event, String[] commands);
+	protected abstract void action(SlashCommandInteractionEvent event);
 
 }
