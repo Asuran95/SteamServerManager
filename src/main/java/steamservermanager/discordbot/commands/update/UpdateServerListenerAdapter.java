@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import net.dv8tion.jda.api.requests.restaction.MessageEditAction;
 import steamservermanager.dtos.ServerGameDTO;
@@ -17,14 +17,14 @@ import steamservermanager.utils.ServiceProvider;
 
 public class UpdateServerListenerAdapter implements SteamServerManagerListener{
 
-	private MessageReceivedEvent event;
+	private SlashCommandInteractionEvent event;
 	private ServerGame serverGame;
 	private ServerGameDTO serverGameStartedUpdate;
 	private Message message;
 	
 	private EventManagerService eventManager = ServiceProvider.provide(EventManagerService.class);
 	
-	public UpdateServerListenerAdapter(MessageReceivedEvent event, ServerGame serverGame) {
+	public UpdateServerListenerAdapter(SlashCommandInteractionEvent event, ServerGame serverGame) {
 		this.event = event;
 		this.serverGame = serverGame;
 		
