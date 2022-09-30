@@ -28,8 +28,9 @@ public class ControlServerCommand extends DiscordCommandHandler {
 			return;
 			
 		} else if (subcommandName.equals("stop")) {
-			
-			event.reply("This option is a work in progress!").queue();
+
+			long id = event.getOption("name").getAsLong();
+			stopServerById(event, id);
 			
 			return;
 		}
@@ -47,11 +48,27 @@ public class ControlServerCommand extends DiscordCommandHandler {
 		event.reply("Server #" + id + " - " + serverGame.getName() + " (" + serverGame.getGameName() + ")" + " has been initialized.").queue();
 	}
 	
+	private void stopServerById(SlashCommandInteractionEvent event, Long id) {
+		ServerGame serverGame = serverGameEAO.find(id);
+		
+		if (serverGame == null) {
+			throw new RuntimeException("There is no game server with this ID.");
+		}
+		
+		stopServerGame(event, serverGame);
+		event.reply("Server #" + id + " - " + serverGame.getName() + " (" + serverGame.getGameName() + ")" + " has been stopped.").queue();
+	}
+
 	private void startServerGame(SlashCommandInteractionEvent event, ServerGame serverGame) {
 		ServerRunnerService serverRunnerService = ServiceProvider.provide(ServerRunnerService.class);
 		serverRunnerService.startServer(serverGame);
 	}
 	
+	private void stopServerGame(SlashCommandInteractionEvent event, ServerGame serverGame) {
+		ServerRunnerService serverRunnerService = ServiceProvider.provide(ServerRunnerService.class);
+		serverRunnerService.stopServer(serverGame);
+	}
+
 	@Override
 	public String help() {
 		// TODO Auto-generated method stub
