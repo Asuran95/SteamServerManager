@@ -35,7 +35,6 @@ public class ServerListCommand extends DiscordCommandHandler {
 			
 			for (ServerGame serverGame : serverList) {
 				StringBuilder sb = new StringBuilder();
-				sb.append("**ID:** " + serverGame.getIdServerGame() + " ");
 				sb.append("**Game:** " + serverGame.getGameName() + " ");
 				sb.append("**SteamID:** " + serverGame.getAppID() + " ");
 				sb.append("**Status:** " + serverGame.getStatus().name() + " ");
