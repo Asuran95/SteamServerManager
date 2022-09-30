@@ -24,7 +24,6 @@ public class UpdateServerCommand extends DiscordCommandHandler {
 		
 		if (subcommandName.equals("all")) {
 			
-
 			event.reply(event.getUser().getName() + " has initiated a full update.").queue();
 			
 			updateAllServers(event);
@@ -33,17 +32,10 @@ public class UpdateServerCommand extends DiscordCommandHandler {
 			
 		} else if (subcommandName.equals("game")) {
 			
-			
 			int steamId = event.getOption("name").getAsInt();
-			String gameName = null;
-			List<ServerGame> serverList = serverGameEAO.findAll();
-			
-			for (ServerGame serverGame : serverList) {
-				if (serverGame.getAppID().equals(steamId)) {
-					gameName = serverGame.getGameName();
-					break;
-				}
-			}
+
+			ServerGame game = this.serverGameEAO.findByAppID(steamId).stream().findFirst().get();
+			String gameName = game.getGameName();
 			
 			event.reply(event.getUser().getName() + " has initiated an update for all `" + gameName + "` servers.").queue();
 			
