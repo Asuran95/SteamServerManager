@@ -101,10 +101,4 @@ public class UpdateServerCommand extends DiscordCommandHandler {
 	private void createDiscordUpdaterListener(SlashCommandInteractionEvent event, ServerGame serverGame) {
 		new UpdateServerListenerAdapter(event, serverGame);
 	}
-
-	@Override
-	public String help() {
-		return "'all' - Update all servers.";
-	}
-
 }

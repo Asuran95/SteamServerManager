@@ -21,6 +21,7 @@ public class SteamServerManagerService {
 	private ServerRunnerService serverRunnerService = ServiceProvider.provide(ServerRunnerService.class);
     private SteamServerManagerValidator validator = new SteamServerManagerValidator();
     private EventManagerService eventManager = ServiceProvider.provide(EventManagerService.class);
+    private DiscordBotService discordBotService = ServiceProvider.provide(DiscordBotService.class);
     
     public ServerGame create(ServerGame serverGame) {
     	String localNameNormalized = StringUtils.normalizeStringForDirectoryName(serverGame.getLocalName());
@@ -32,8 +33,9 @@ public class SteamServerManagerService {
     	
     	validator.validadeNewServer(serverGame);
         serverGameEAO.persist(serverGame);
-        
     	updaterServerGameService.update(serverGame);
+    	
+    	discordBotService.updateSlashCommands();
     	
     	return serverGame;
     }
@@ -46,6 +48,8 @@ public class SteamServerManagerService {
     	for(SteamServerManagerListener steamServerManagerListener : eventManager.getSteamServerManagerListeners()) {
     		steamServerManagerListener.onServerGameChanged(serverGameDTO);
     	}
+    	
+    	discordBotService.updateSlashCommands();
 
     	return serverGame;
     }
@@ -63,5 +67,4 @@ public class SteamServerManagerService {
     	
     	return serverList;
     }
-
 }

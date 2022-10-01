@@ -51,11 +51,4 @@ public class ServerListCommand extends DiscordCommandHandler {
 			throw new RuntimeException("The server library is empty.");
 		}
 	}
-	
-	@Override
-	public String help() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

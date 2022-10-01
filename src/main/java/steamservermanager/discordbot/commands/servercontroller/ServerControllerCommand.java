@@ -1,4 +1,4 @@
-package steamservermanager.discordbot.commands.controlserver;
+package steamservermanager.discordbot.commands.servercontroller;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import steamservermanager.discordbot.commands.DiscordCommandHandler;
@@ -7,12 +7,12 @@ import steamservermanager.models.ServerGame;
 import steamservermanager.services.ServerRunnerService;
 import steamservermanager.utils.ServiceProvider;
 
-public class ControlServerCommand extends DiscordCommandHandler {
+public class ServerControllerCommand extends DiscordCommandHandler {
 
 	private ServerGameEAO serverGameEAO = ServiceProvider.provide(ServerGameEAO.class);
 	
-	public ControlServerCommand() {
-		super(new ControlServerCommandValidator());
+	public ServerControllerCommand() {
+		super(new ServerControllerCommandValidator());
 	}
 	
 	@Override
@@ -34,7 +34,6 @@ public class ControlServerCommand extends DiscordCommandHandler {
 			
 			return;
 		}
-		
 	}
 	
 	private void startServerById(SlashCommandInteractionEvent event, Long id) {
@@ -68,11 +67,4 @@ public class ControlServerCommand extends DiscordCommandHandler {
 		ServerRunnerService serverRunnerService = ServiceProvider.provide(ServerRunnerService.class);
 		serverRunnerService.stopServer(serverGame);
 	}
-
-	@Override
-	public String help() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

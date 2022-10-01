@@ -4,16 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.dv8tion.jda.api.JDA.Status;
-import net.dv8tion.jda.api.events.ExceptionEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.StatusChangeEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import steamservermanager.discordbot.commands.DiscordCommandHandler;
-import steamservermanager.discordbot.commands.controlserver.ControlServerCommand;
+import steamservermanager.discordbot.commands.servercontroller.ServerControllerCommand;
 import steamservermanager.discordbot.commands.serverlist.ServerListCommand;
 import steamservermanager.discordbot.commands.update.UpdateServerCommand;
+import steamservermanager.discordbot.helpers.DiscordBotSlashCommandHelper;
 import steamservermanager.discordbot.listener.DiscordBotListener;
 
 public class SteamServerManagerDiscordBot extends ListenerAdapter {
@@ -26,7 +26,7 @@ public class SteamServerManagerDiscordBot extends ListenerAdapter {
 		
 		map.put("update", new UpdateServerCommand());
 		map.put("show", new ServerListCommand());
-		map.put("server", new ControlServerCommand());
+		map.put("server", new ServerControllerCommand());
 	}
 
 	@Override
@@ -49,18 +49,11 @@ public class SteamServerManagerDiscordBot extends ListenerAdapter {
 	@Override
 	public void onReady(ReadyEvent event) {
 		discordBotListener.onDiscordBotStarted();
+		DiscordBotSlashCommandHelper.updateCommands(event.getJDA());
 	}
 	
 	@Override
 	public void onShutdown(ShutdownEvent event) {
 		discordBotListener.onDiscordBotStopped();
-	}
-	
-	@Override
-	public void onException(ExceptionEvent event) {
-		String message = event.getCause().getMessage();
-		
-		//discordBotListener.onDiscordBotChangedStatus(message);
-		
 	}
 }

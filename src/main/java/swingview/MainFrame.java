@@ -173,17 +173,15 @@ public class MainFrame extends javax.swing.JFrame {
         jTextAreaSteamCMD = new javax.swing.JTextArea();
         jPanelSettings = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jTextFieldDiscordBotPrefix = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTextFieldDiscordBotOwnerUserId = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jButtonSaveDiscordBot = new javax.swing.JButton();
+        jPasswordFieldDiscordBotToken = new javax.swing.JPasswordField();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jTextFieldStatusBotDiscord = new javax.swing.JTextField();
         jToggleButtonStartDiscordBot = new javax.swing.JToggleButton();
-        jPasswordFieldDiscordBotToken = new javax.swing.JPasswordField();
         jPanel5 = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
@@ -193,7 +191,6 @@ public class MainFrame extends javax.swing.JFrame {
         setMaximumSize(new java.awt.Dimension(1020, 680));
         setMinimumSize(new java.awt.Dimension(1020, 680));
         setUndecorated(true);
-        setResizable(false);
 
         jButtonOpenLibrary.setText("Open");
         jButtonOpenLibrary.addActionListener(new java.awt.event.ActionListener() {
@@ -257,7 +254,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButtonOpenLibrary)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -304,7 +301,7 @@ public class MainFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -318,14 +315,6 @@ public class MainFrame extends javax.swing.JFrame {
         jTabbedPane1.addTab("SteamCMD Console", jPanel2);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("DiscordBOT"));
-
-        jLabel1.setText("Prefix");
-
-        jTextFieldDiscordBotPrefix.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldDiscordBotPrefixActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("Owner UserID");
 
@@ -344,7 +333,9 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel4.setText("Status");
 
         jTextFieldStatusBotDiscord.setEditable(false);
+        jTextFieldStatusBotDiscord.setBackground(new java.awt.Color(1, 1, 1));
         jTextFieldStatusBotDiscord.setFont(new java.awt.Font("Droid Sans Mono", 1, 13)); // NOI18N
+        jTextFieldStatusBotDiscord.setForeground(new java.awt.Color(38, 185, 253));
 
         jToggleButtonStartDiscordBot.setText("Start");
         jToggleButtonStartDiscordBot.addActionListener(new java.awt.event.ActionListener() {
@@ -358,19 +349,17 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel4)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTextFieldStatusBotDiscord)))
+                    .addComponent(jTextFieldStatusBotDiscord))
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(102, 102, 102)
+                .addGap(169, 169, 169)
                 .addComponent(jToggleButtonStartDiscordBot, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(179, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,36 +381,34 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPasswordFieldDiscordBotToken)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel1)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
-                            .addComponent(jTextFieldDiscordBotPrefix, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
                             .addComponent(jLabel3)
-                            .addComponent(jButtonSaveDiscordBot, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldDiscordBotOwnerUserId))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jButtonSaveDiscordBot, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jTextFieldDiscordBotOwnerUserId, javax.swing.GroupLayout.Alignment.LEADING))
                 .addContainerGap())
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldDiscordBotPrefix, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldDiscordBotOwnerUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldDiscordBotOwnerUserId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPasswordFieldDiscordBotToken, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonSaveDiscordBot))
+                .addComponent(jButtonSaveDiscordBot)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53))
         );
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Misc"));
@@ -444,7 +431,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jCheckBox2)
                     .addComponent(jCheckBox1))
-                .addContainerGap(164, Short.MAX_VALUE))
+                .addContainerGap(226, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -452,7 +439,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jCheckBox1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBox2)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanelSettingsLayout = new javax.swing.GroupLayout(jPanelSettings);
@@ -460,17 +447,18 @@ public class MainFrame extends javax.swing.JFrame {
         jPanelSettingsLayout.setHorizontalGroup(
             jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSettingsLayout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanelSettingsLayout.setVerticalGroup(
             jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelSettingsLayout.createSequentialGroup()
-                .addGroup(jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 400, Short.MAX_VALUE))
+                .addGroup(jPanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 247, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Settings", jPanelSettings);
@@ -535,10 +523,6 @@ public class MainFrame extends javax.swing.JFrame {
         newServerFrame.setVisible(true);  
     }//GEN-LAST:event_jButtonNewServerActionPerformed
 
-    private void jTextFieldDiscordBotPrefixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDiscordBotPrefixActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldDiscordBotPrefixActionPerformed
-
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
@@ -555,8 +539,6 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleButtonStartDiscordBotActionPerformed
 
     private void jButtonSaveDiscordBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveDiscordBotActionPerformed
-        
-        String prefix = jTextFieldDiscordBotPrefix.getText();
         String ownerUserIdString = jTextFieldDiscordBotOwnerUserId.getText();
         String token = new String(jPasswordFieldDiscordBotToken.getPassword());
         
@@ -713,7 +695,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSaveDiscordBot;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -734,7 +715,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTable jTableLibrary;
     private javax.swing.JTextArea jTextAreaSteamCMD;
     private javax.swing.JTextField jTextFieldDiscordBotOwnerUserId;
-    private javax.swing.JTextField jTextFieldDiscordBotPrefix;
     private javax.swing.JTextField jTextFieldStatusBotDiscord;
     private javax.swing.JToggleButton jToggleButtonStartDiscordBot;
     // End of variables declaration//GEN-END:variables
