@@ -57,7 +57,7 @@ public class DiscordBotService {
 		try {
 			if (discordBot != null) {
 				jda = JDABuilder.createDefault(discordBot.getToken())
-				          .addEventListeners(new SteamServerManagerDiscordBot(discordBot.getPrefix(), eventManager.getDiscordBotListener()))
+				          .addEventListeners(new SteamServerManagerDiscordBot(eventManager.getDiscordBotListener()))
 				          .build();
 				restartSlashCommands();
 			}			

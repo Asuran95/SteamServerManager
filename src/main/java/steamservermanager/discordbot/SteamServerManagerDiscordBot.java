@@ -21,7 +21,7 @@ public class SteamServerManagerDiscordBot extends ListenerAdapter {
 	private Map<String, DiscordCommandHandler> map = new HashMap<>();
 	private DiscordBotListener discordBotListener;
 	
-	public SteamServerManagerDiscordBot(String prefix, DiscordBotListener discordBotListener) {
+	public SteamServerManagerDiscordBot(DiscordBotListener discordBotListener) {
 		this.discordBotListener = discordBotListener;
 		
 		map.put("update", new UpdateServerCommand());

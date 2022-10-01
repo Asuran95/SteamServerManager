@@ -512,7 +512,6 @@ public class MainFrame extends javax.swing.JFrame {
             DiscordBotDTO discordBot = steamServerManager.getDiscordBot();
             
             if (discordBot != null){
-                jTextFieldDiscordBotPrefix.setText(discordBot.getPrefix());
                 jTextFieldDiscordBotOwnerUserId.setText(discordBot.getOwnerUserId()+"");
                 jPasswordFieldDiscordBotToken.setText(discordBot.getToken());
             }
@@ -572,7 +571,6 @@ public class MainFrame extends javax.swing.JFrame {
         }
         
         DiscordBotDTO discordbotDTO = new DiscordBotDTO();
-        discordbotDTO.setPrefix(prefix);
         discordbotDTO.setOwnerUserId(ownerUserId);
         discordbotDTO.setToken(token);
         

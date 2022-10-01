@@ -11,8 +11,6 @@ public class DiscordBot {
 	
 	private String token;
 	
-	private String prefix;
-	
 	private Long ownerUserId;
 
 	public Long getIdDiscordBot() {
@@ -31,14 +29,6 @@ public class DiscordBot {
 		this.token = token;
 	}
 
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
 	public Long getOwnerUserId() {
 		return ownerUserId;
 	}
@@ -46,7 +36,4 @@ public class DiscordBot {
 	public void setOwnerUserId(Long ownerUserId) {
 		this.ownerUserId = ownerUserId;
 	}
-
-	
-	
 }
