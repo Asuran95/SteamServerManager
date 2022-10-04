@@ -55,6 +55,8 @@ public class DiscordBotSlashCommandHelper {
 		gameNameMap.forEach((appId, gameName) -> {
 			option.addChoice(gameName, appId);
 		});
+		
+		option.addChoice("all", 1);
 
 		return option;
 	}
@@ -66,6 +68,8 @@ public class DiscordBotSlashCommandHelper {
 			option.addChoice(serverGame.getName(), serverGame.getIdServerGame());
 		}
 
+		option.addChoice("all", 1);
+		
 		return option;
 	}
 }

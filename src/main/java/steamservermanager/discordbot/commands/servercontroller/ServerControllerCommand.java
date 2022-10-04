@@ -1,5 +1,7 @@
 package steamservermanager.discordbot.commands.servercontroller;
 
+import java.util.List;
+
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import steamservermanager.discordbot.commands.DiscordCommandHandler;
 import steamservermanager.eao.ServerGameEAO;
@@ -23,16 +25,47 @@ public class ServerControllerCommand extends DiscordCommandHandler {
 		if (subcommandName.equals("start")) {
 			
 			long id = event.getOption("name").getAsLong();
-			startServerById(event, id);
 			
-			return;
+			if (id == 1) {
+				event.reply(event.getUser().getName() + " has initialized all servers.").queue();
+				startAllServers(event);
+				
+				return;
+			}
+			
+			event.reply("Server " + serverGameEAO.find(id).getName() + " (" + serverGameEAO.find(id).getGameName() + ")" + " has been initialized.").queue();
+			startServerById(event, id);
 			
 		} else if (subcommandName.equals("stop")) {
 
 			long id = event.getOption("name").getAsLong();
+			
+			if (id == 1) {
+				event.reply(event.getUser().getName() + " has stopped all servers.").queue();
+				stopAllServers(event);
+				
+				return;
+			}
+			
+			event.reply("Server " + serverGameEAO.find(id).getName() + " (" + serverGameEAO.find(id).getGameName() + ")" + " has been stopped.").queue();
 			stopServerById(event, id);
 			
-			return;
+		}
+	}
+	
+	private void startAllServers(SlashCommandInteractionEvent event) {
+		List<ServerGame> serverList = ServiceProvider.provide(ServerGameEAO.class).findAll();
+		
+		for (ServerGame serverGame : serverList) {
+			startServerById(event, serverGame.getIdServerGame());
+		}
+	}
+	
+	private void stopAllServers(SlashCommandInteractionEvent event) {
+		List<ServerGame> serverList = ServiceProvider.provide(ServerGameEAO.class).findAll();
+		
+		for (ServerGame serverGame : serverList) {
+			stopServerById(event, serverGame.getIdServerGame());
 		}
 	}
 	
@@ -44,7 +77,6 @@ public class ServerControllerCommand extends DiscordCommandHandler {
 		}
 		
 		startServerGame(event, serverGame);
-		event.reply("Server #" + id + " - " + serverGame.getName() + " (" + serverGame.getGameName() + ")" + " has been initialized.").queue();
 	}
 	
 	private void stopServerById(SlashCommandInteractionEvent event, Long id) {
@@ -55,7 +87,6 @@ public class ServerControllerCommand extends DiscordCommandHandler {
 		}
 		
 		stopServerGame(event, serverGame);
-		event.reply("Server #" + id + " - " + serverGame.getName() + " (" + serverGame.getGameName() + ")" + " has been stopped.").queue();
 	}
 
 	private void startServerGame(SlashCommandInteractionEvent event, ServerGame serverGame) {
