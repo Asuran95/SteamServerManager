@@ -19,7 +19,6 @@ public class UpdateServerCommand extends DiscordCommandHandler {
 
 	@Override
 	protected void action(SlashCommandInteractionEvent event) {
-
 		String subcommandName = event.getSubcommandName();
 		
 		if (subcommandName.equals("all")) {
@@ -31,7 +30,6 @@ public class UpdateServerCommand extends DiscordCommandHandler {
 			return;
 			
 		} else if (subcommandName.equals("game")) {
-			
 			int steamId = event.getOption("name").getAsInt();
 
 			ServerGame game = this.serverGameEAO.findByAppID(steamId).stream().findFirst().get();
@@ -44,17 +42,14 @@ public class UpdateServerCommand extends DiscordCommandHandler {
 			return;
 			
 		} else if (subcommandName.equals("server")) {
-			
 			long id = event.getOption("name").getAsLong();
 			
-			event.reply(event.getUser().getName() + " has initiated an update for the server `" + serverGameEAO.findServerGameById(id).getServerName() + "`.").queue();
+			event.reply(event.getUser().getName() + " has initiated an update for the server `" + serverGameEAO.findServerGameById(id).getName() + "`.").queue();
 			
 			updateServerById(event, id);
 			
 			return;
-			
 		}
-		
 	}
 
 	private void updateAllServers(SlashCommandInteractionEvent event) {
