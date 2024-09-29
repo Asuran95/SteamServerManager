@@ -18,12 +18,11 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
-
-import com.jtattoo.plaf.acryl.AcrylLookAndFeel;
 
 import steamservermanager.SteamServerManager;
 import steamservermanager.SteamServerManagerBuilder;
@@ -190,7 +189,7 @@ public class MainFrame extends javax.swing.JFrame {
         setTitle("Steam Server Manager");
         setMaximumSize(new java.awt.Dimension(1020, 680));
         setMinimumSize(new java.awt.Dimension(1020, 680));
-        setUndecorated(true);
+        setUndecorated(false);
 
         jButtonOpenLibrary.setText("Open");
         jButtonOpenLibrary.addActionListener(new java.awt.event.ActionListener() {
@@ -666,10 +665,12 @@ public class MainFrame extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-        	AcrylLookAndFeel.setTheme("Large-Font");
-        	
-        	UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
-
+        	for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
